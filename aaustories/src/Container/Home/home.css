@@ -1,0 +1,12 @@
+.home-container{
+    height: 100vh;
+    padding: 10vh;
+}
+.buttons{
+    flex-direction: column;
+
+}
+
+.link-up, .comfession, .memes, .donation{
+    margin-top: 4vh;
+}

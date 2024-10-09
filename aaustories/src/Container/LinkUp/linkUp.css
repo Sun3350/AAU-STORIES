@@ -1,0 +1,302 @@
+.linkup-page{
+    width: 100%;
+   
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.header{
+   padding: 10px 40px 10px 40px;
+}
+  .header-button{
+    padding: 2vh 10vh 2vh 10vh;
+  }
+  .logo{
+    width: 200px ;
+    height: 200px;
+    }
+  .popup{
+    width: 60%;
+    background-color: #fff;
+    border-radius: 10px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+    margin: 5vh 0vh 10vh 0vh;
+    padding: 2vh 0vh 5vh 0vh;
+  }
+  .linkup-page {
+    position: relative;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+ 
+  .input-container {
+    display: flex;
+    flex-direction: column;
+   gap: 20px;
+  }
+  
+  .user-list {
+    margin-top: 15px;
+    display: flex;
+    justify-content: center;
+    height: 80vh;
+    width: 100%;
+    overflow: hidden;
+  }
+ 
+ 
+  
+  .user-card {
+    width: 100%;
+    height: 100%;
+    padding: 15px;
+    background: #f9f9f9;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  }
+  .user-image{
+    width: 100%;
+    height: 100%;
+  }
+  .user-details{
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    display: flex;
+    justify-content: center;
+    align-items: end;
+    padding: 10px;
+    background: rgb(0,0,0);
+     background: linear-gradient(180deg, rgba(0,0,0,1) 0%, rgba(0,0,0,1) 0%, rgba(0,0,0,0) 0%, rgba(1,93,170,0.6699054621848739) 100%);
+  }
+  .icon{
+    color: #015daa;
+    margin-right: 1vh;
+  }
+  .social-icon{
+    color: #ffffff;
+    
+  }
+  .social-container {
+    transition: transform 0.3s ease; /* Smooth rotation */
+  }
+  
+  .rotate-icon {
+    transform: rotate(45deg); /* Rotate 45 degrees when expanded */
+  }
+  .description {
+    margin-top: 10px;
+    font-size: 14px;
+    line-height: 1.6;
+    color: #ffffff; /* Dark text color for readability */
+    position: relative;
+  }
+  
+  .description p {
+    margin: 0;
+    color: #ffffff; /* Slightly lighter text color for the description */
+    word-wrap: break-word;
+  }
+  
+  .description button {
+    background: none;
+    border: none;
+    padding: 0;
+    font-size: 14px;
+    color: #015daa; /* Blue color for the "See More" / "Hide" button */
+    cursor: pointer;
+    font-weight: bold;
+  }
+  
+  .description button:hover {
+    text-decoration: underline;
+  }
+  
+  .description button:focus {
+    outline: none; /* Remove outline on button focus */
+  }
+  /* YourComponent.css */
+.container {
+    position: relative; /* Ensure that the absolute positioning is relative to this container */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  .expanded-containers {
+    position: absolute; /* Position absolutely */
+     bottom: 11vh;
+    transform: translateY(-10px); /* Adjust for spacing */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    transition: all 0.3s ease; /* Smooth transition */
+  }
+  .social-container{
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    background-color: #015daa;
+    margin: 5px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  .expanded-container {
+    width: 50px; /* Adjust width as needed */
+    height: 50px; /* Adjust height as needed */
+    background-color: #015daa; /* Your preferred color */
+    margin: 5px; /* Space between containers */
+    border-radius: 50%; /* Circular shape */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    opacity: 0; /* Start invisible */
+    animation: showUp 0.3s forwards; /* Animation when expanding */
+  }
+  
+  @keyframes showUp {
+    from {
+      transform: translateY(10px); /* Start slightly lower for animation effect */
+      opacity: 0; /* Fully invisible */
+    }
+    to {
+      transform: translateY(0); /* Move to original position */
+      opacity: 1; /* Become visible */
+    }
+  }
+  
+  /* To retract the containers back */
+  .container:not(:hover) .expanded-container {
+    animation: hideDown 0.3s forwards; /* Animation for retracting */
+  }
+  
+  @keyframes hideDown {
+    from {
+      transform: translateY(0); /* Start from expanded position */
+      opacity: 1; /* Fully visible */
+    }
+    to {
+      transform: translateY(10px); /* Move down slightly */
+      opacity: 0; /* Fade out */
+    }
+  }
+  .container-icon{
+    color: white;
+  }
+  .react-tooltip {
+    background-color: #015daa !important;
+    color: white !important;
+    font-size: 14px;
+    padding: 8px;
+    border-radius: 5px;
+  }
+  
+
+
+  .embla {
+    width: 30%;
+    margin: auto;
+    --slide-height: 19rem;
+    --slide-spacing: 1rem;
+    --slide-size: 100%;
+  }
+  .embla__viewport {
+    overflow: hidden;
+  }
+  .embla__container {
+    display: flex;
+    touch-action: pan-y pinch-zoom;
+   
+  }
+  .embla__slide {
+    transform: translate3d(0, 0, 0);
+    flex: 0 0 var(--slide-size);
+    min-width: 0;
+    padding-left: var(--slide-spacing);
+  }
+  
+  .embla__controls {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    justify-content: space-between;
+    gap: 1.2rem;
+    margin-top: 1.8rem;
+  }
+  .embla__buttons {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 0.6rem;
+    align-items: center;
+  }
+  .embla__button {
+    -webkit-tap-highlight-color: rgba(var(--text-high-contrast-rgb-value), 0.5);
+    -webkit-appearance: none;
+    appearance: none;
+    background-color: transparent;
+    touch-action: manipulation;
+    display: inline-flex;
+    text-decoration: none;
+    cursor: pointer;
+    border: 0;
+    padding: 0;
+    margin: 0;
+    box-shadow: inset 0 0 0 0.2rem var(--detail-medium-contrast);
+    width: 3.6rem;
+    height: 3.6rem;
+    z-index: 1;
+    border-radius: 50%;
+    color: var(--text-body);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .embla__button:disabled {
+    color: var(--detail-high-contrast);
+  }
+  .embla__button__svg {
+    width: 35%;
+    height: 35%;
+  }
+  .embla__dots {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+    align-items: center;
+    margin-right: calc((2.6rem - 1.4rem) / 2 * -1);
+  }
+  .embla__dot {
+    -webkit-tap-highlight-color: rgba(var(--text-high-contrast-rgb-value), 0.5);
+    -webkit-appearance: none;
+    appearance: none;
+    background-color: transparent;
+    touch-action: manipulation;
+    display: inline-flex;
+    text-decoration: none;
+    cursor: pointer;
+    border: 0;
+    padding: 0;
+    margin: 0;
+    width: 2.6rem;
+    height: 2.6rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+  }
+  .embla__dot:after {
+    box-shadow: inset 0 0 0 0.2rem var(--detail-medium-contrast);
+    width: 1.4rem;
+    height: 1.4rem;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    content: '';
+  }
+  .embla__dot--selected:after {
+    box-shadow: inset 0 0 0 0.2rem var(--text-body);
+  }
+  

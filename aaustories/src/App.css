@@ -1,0 +1,40 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@import url('https://fonts.googleapis.com/css2?family=Raleway:ital,wght@0,100..900;1,100..900&display=swap');
+
+*{
+  font-family: "Raleway", sans-serif;
+ 
+}
+
+button{
+  padding: 10px 20px 10px 20px;
+  border-radius: 10px;
+  color: white;
+  font-weight: 400;
+}
+option{
+  margin: 2vh;
+}
+h2{
+  font-weight: 600;
+  color: #015daa;
+  font-size: 30px;
+}
+input{
+ width: 100%;
+ border: 1px solid #015daa ;
+ padding: 10px;
+ border-radius: 5px;
+}
+input:focus{
+ outline: none;
+}
+h3{
+  font-size: 20px;
+  font-weight: 500;
+  color: white;
+  text-transform: uppercase;
+}
