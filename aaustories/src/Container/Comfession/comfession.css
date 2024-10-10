@@ -1,0 +1,158 @@
+.comfession-page{
+    position: relative;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    background-color: #015daa;
+    color: #fff;
+}
+.comfession-popup{
+    width: 60%;
+    background-color: #fff;
+    border-radius: 10px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+    padding: 2vh 0vh 5vh 0vh;
+    position: absolute;
+    top: 12vh;
+   z-index: 2;
+
+}
+.comfession{
+    height: 85vh;
+}
+.embla_ {
+    max-width: 55rem;
+    margin: auto;
+    --slide-height: 19rem;
+    --slide-spacing: 1rem;
+    --slide-size: 70%;
+  }
+  .embla___viewport {
+    overflow: hidden;
+  }
+  .embla___container {
+    display: flex;
+    touch-action: pan-y pinch-zoom;
+    margin-left:10vh;
+   
+  }
+  .embla___slide {
+    transform: translate3d(0, 0, 0);
+    flex: 0 0 var(--slide-size);
+    min-width: 0;
+    padding: var(--slide-spacing);
+    border-radius: 10px;
+    border: 1px solid #fff;
+    margin: 2vh;
+    overflow: auto;
+  }
+ 
+  .embla___controls {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    justify-content: space-between;
+    gap: 1.2rem;
+    margin-top: 1.8rem;
+  }
+  .embla___buttons {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 0.6rem;
+    align-items: center;
+    color: #ffffff;
+  }
+  .embla___button {
+    -webkit-tap-highlight-color: rgba(var(--text-high-contrast-rgb-value), 0.5);
+    -webkit-appearance: none;
+    appearance: none;
+    background-color: transparent;
+    touch-action: manipulation;
+    display: inline-flex;
+    text-decoration: none;
+    cursor: pointer;
+    border: 0;
+    padding: 0;
+    margin: 0;
+    box-shadow: inset 0 0 0 0.2rem var(--detail-medium-contrast);
+    width: 3.6rem;
+    height: 3.6rem;
+    z-index: 1;
+    border-radius: 50%;
+    color: #105daa;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .embla___button:disabled {
+    color: var(--detail-high-contrast);
+  }
+  .embla___button__svg {
+    width: 35%;
+    height: 35%;
+    color: #0056b3;
+  }
+  .embla___dots {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+    align-items: center;
+    color: #0056b3;
+    margin-right: calc((2.6rem - 1.4rem) / 2 * -1);
+  }
+  .embla___dot {
+    -webkit-tap-highlight-color: rgba(var(--text-high-contrast-rgb-value), 0.5);
+    -webkit-appearance: none;
+    appearance: none;
+    background-color: transparent;
+    touch-action: manipulation;
+    display: inline-flex;
+    text-decoration: none;
+    cursor: pointer;
+    border: 0;
+    padding: 0;
+    margin: 0;
+    width: 2.6rem;
+    height: 2.6rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+  }
+  .embla___dot:after {
+    box-shadow: inset 0 0 0 0.2rem var(--detail-medium-contrast);
+    width: 1.4rem;
+    height: 1.4rem;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    content: '';
+    color: #0056b3;
+  }
+  .embla___dot--selected:after {
+    box-shadow: inset 0 0 0 0.2rem var(--text-body);
+  }
+  .embla___slide {
+    transition: opacity 0.2s ease-in-out;
+  }
+  .embla___slide:not(.is-snapped) {
+    opacity: 0.16;
+  }
+  
+  .read-more-button {
+    /* Bootstrap primary color */
+    color: white;
+    border: none;
+    padding: 0.5rem 1rem;
+    margin-top: 1rem; /* Add space above the button */
+    cursor: pointer;
+    border-radius: 0.25rem; /* Optional: for rounded corners */
+    transition: background-color 0.3s; /* Smooth transition for hover effect */
+  }
+  
+  .read-more-button:hover {
+    background-color: white; 
+    color: #015daa;/* Darker shade on hover */
+  }
+  

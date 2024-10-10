@@ -5,7 +5,7 @@ const cloudinary = require('../config/cloudconfig');
 const { CloudinaryStorage } = require('multer-storage-cloudinary');
 const router = express.Router();
 const multer = require('multer');
-
+const Confession = require('../model/Comfession')
 // Set up storage for multer
 const storage = new CloudinaryStorage({
     cloudinary: cloudinary,
@@ -27,7 +27,7 @@ router.post('/search', async (req, res) => {
     if (!gender || !location) {
       return res.status(400).json({ message: 'Gender and location are required' });
     }
-  
+
     try {
       const users = await User.find({
         gender: { $regex: new RegExp(`^${gender}$`, 'i') },  // Case-insensitive match
@@ -36,6 +36,7 @@ router.post('/search', async (req, res) => {
   
       if (users.length > 0) {
         res.json(users);
+        
       } else {
         res.status(404).json({ message: 'No users found' });
       }
@@ -43,6 +44,7 @@ router.post('/search', async (req, res) => {
       console.error('Error searching for users:', err);
       res.status(500).json({ message: 'Server error' });
     }
+   
   });
   
   
@@ -73,5 +75,58 @@ router.post('/users', upload.single('image'), async (req, res) => {
       res.status(500).json({ message: 'Server error' });
     }
   });
+  
+
+  router.post('/submit-comfession', async (req, res) => {
+    try {
+      const { text } = req.body;
+      const newConfession = new Confession({ text });
+      await newConfession.save();
+      res.status(201).json(newConfession);
+    } catch (error) {
+      res.status(400).json({ message: 'Error submitting confession' });
+    }
+  });
+  
+  // Get all confessions
+  router.get('/get-all-confessions', async (req, res) => {
+    try {
+      const confessions = await Confession.find();
+      res.json(confessions);
+    } catch (error) {
+      res.status(500).json({ message: 'Error fetching confessions' });
+    }
+  });
+  
+  router.get('/confession/:confessionId', async (req, res) => {
+    try {
+        const confessionId = req.params.confessionId ; 
+        const confession = await Confession.findById({ _id: confessionId });
+        if (!confession) {
+            return res.status(404).json({ message: 'Confession not found' });
+        }
+        res.status(200).json(confession);
+    } catch (error) {
+        console.error('Error fetching confession:', error);
+        res.status(500).json({ message: 'Server error' });
+    }
+});
+
+  // Add a comment to a confession
+  router.post('/confessions/:id/confession-comment', async (req, res) => {
+    try {
+        const { tex } = req.body;
+        const confession = await Confession.findById(req.params.id);
+        if (!confession) {
+            return res.status(404).json({ message: 'Confession not found' });
+        }
+        confession.comments.push({ tex });
+        await confession.save();
+        res.status(201).json(confession);
+    } catch (error) {
+        res.status(400).json({ message: 'Error adding comment' });
+    }
+});
+
   
 module.exports = router;

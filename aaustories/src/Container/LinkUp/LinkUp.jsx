@@ -120,8 +120,10 @@ const LinkUp = (props) => {
   };
 
 const [details, setDetails] = useState(true)
+  const [selectedUserId, setSelectedUserId] = useState(null);
+
 const { slides, options } = props
-const [emblaRef, emblaApi] = useEmblaCarousel(options)
+const [emblaRef, emblaApi, embla] = useEmblaCarousel(options)
 
 const { selectedIndex, scrollSnaps, onDotButtonClick } =
   useDotButton(emblaApi)
@@ -134,16 +136,29 @@ const {
 } = usePrevNextButtons(emblaApi)
 
 
-
+useEffect(() => {
+  if (embla) {
+    embla.on('select', () => {
+      const selectedIndex = embla.selectedScrollSnap();
+      const selectedUser = users[selectedIndex];
+      const userId = users._id;
+console.log(users._id)
+      const selectedUserId = selectedUser._id; // Change this to _id if necessary
+      window.history.pushState({}, '', `/linkup/${userId}`);
+      setSelectedUserId(selectedUserId);
+      
+    });
+  }
+}, [embla, users]);
 
 return (
   <div className='linkup-page'>
   <div className='header w-full flex justify-between items-center'>
-    <a className='text-[#015daa] font-bold' href="/">Close</a> 
+    <a className='text-[#ffffff] font-bold' href="/">Close</a> 
     {searchDone && (
       <button 
-        className='header-button bg-[#015daa] text-white' 
-        //onClick={handleNavigation}
+        className='header-button bg-[#fff] text-[#105daa] font-bold' 
+        onClick={handleNavigation}
       >
         Change Location
       </button>
@@ -194,7 +209,14 @@ return (
       </div>
     </motion.div>
   ) : (
-   
+   <div className='flex'>
+    <div className="embla__controls">
+            <div className="embla__buttons">
+              <PrevButton onClick={onPrevButtonClick} disabled={prevBtnDisabled} />
+            </div>
+
+          
+          </div>
  
       <div className='embla'>
       <div className=" user-list embla__viewport" ref={emblaRef}>
@@ -210,6 +232,7 @@ return (
                 variants={userCardContainerVariants}
               >
                  <div className='relative w-full h-full'>
+                  
                     <img 
                       className='user-image' 
                       src={user.image} 
@@ -279,6 +302,7 @@ return (
                                     <FaFacebook className='container-icon' />
                                   </a>
                                 </div>
+                               
                               </div>
                             )}
                             <div className={`social-container ${socialExpanded ? 'rotate-icon' : ''}`}>
@@ -292,24 +316,20 @@ return (
             ))}
 
           </motion.div>
-        </div><div className="embla__controls">
+          
+        </div>
+       
+        </div> <div className="embla__controls">
             <div className="embla__buttons">
-              <PrevButton onClick={onPrevButtonClick} disabled={prevBtnDisabled} />
               <NextButton onClick={onNextButtonClick} disabled={nextBtnDisabled} />
             </div>
 
-            <div className="embla__dots">
-              {scrollSnaps.map((_, index) => (
-                <DotButton
-                  key={index}
-                  onClick={() => onDotButtonClick(index)}
-                  className={`embla__dot${index === selectedIndex ? ' embla__dot--selected' : ''}`} />
-              ))}
-            </div>
+          
           </div>
-          </div>
+     </div>
   
    )}
+   
 </div>
 
   );

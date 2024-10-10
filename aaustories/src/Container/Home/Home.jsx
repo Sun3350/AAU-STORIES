@@ -26,7 +26,7 @@ const Home = () => {
 
   const buttons = [
     { text: 'Link Up', color: 'bg-rose-600 link-up', link: '/linkup' }, // Add links
-    { text: 'Comfession', color: 'bg-black comfession', link: '/comfession' },
+    { text: 'Comfession', color: 'bg-black comfess', link: '/comfession' },
     { text: 'Memes', color: 'bg-blue-700 memes', link: '/memes' },
     { text: 'Donation', color: 'bg-red-700 donation', link: '/donation' }
   ];

@@ -1,0 +1,11 @@
+.footer-container{
+    position: fixed;
+    bottom: 0;
+    background-color: white;
+    color: #105daa;
+    z-index: 2;
+
+}
+.social-text{
+    font-weight: 600;
+}

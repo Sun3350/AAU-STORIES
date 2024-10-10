@@ -9,6 +9,8 @@ import Comfession from './Container/Comfession/Comfession';
 import Memes from './Container/Memes/Memes';
 import Donation from './Container/Donation/Donation';
 import CreateUser from './Container/Upload/Upload';
+import FullConfession from './Container/Comfession/Confession[';
+import Footer from './Container/Footer/Footer';
 
 const AppContent = () => {
  
@@ -21,10 +23,11 @@ const AppContent = () => {
           <Route path="/linkup" element={<LinkUp />} />
           <Route path="/upload" element={<CreateUser />} />
           <Route path="/comfession" element={<Comfession />} />
+          <Route path="/confession/:id" element={<FullConfession />} />
           <Route path="/memes" element={<Memes />} />
           <Route path="/donation" element={<Donation />} />
         </Routes>
-      
+      <Footer/>
     </>
   );
 };
