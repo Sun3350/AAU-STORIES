@@ -156,3 +156,60 @@
     color: #015daa;/* Darker shade on hover */
   }
   
+  .single-main-confession-container{
+    background-color: #105daa;
+    display: flex;
+    flex-direction: column;
+    align-items:  center;
+    width: 100%;
+  }
+  
+  .single-confession-container{
+    display: flex;
+    flex-direction: column;
+    align-items:  center;
+    width: 70%;
+    margin-bottom: 10vh;
+  }
+  .confession-container{
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+  }
+  .comment-section{
+    width: 100%;
+    margin: 5vh 0vh 6vh 0vh;
+  }
+  .comment-input{
+    background: none;
+    border: 1px solid white;
+    border-top: none;
+    border-right: none;
+    border-left: none;
+   
+    color: white;
+    border-radius: 0px;
+  }
+
+  .comment-input::placeholder{
+    color: #ffffff;
+  }
+  .comments{
+    margin: 2vh 0vh 0vh 0vh;
+    padding: 10px;
+    border-radius: 10px;
+    border: 1px solid white;
+    display: flex;
+  }
+  .sticky-comment {
+    position: sticky;
+    top: 0; /* Sticks when reaching the top of the screen */
+   
+    z-index: 100; /* Keeps it on top of other content */
+  }
+  .comments-container{
+    width: 100%;
+    overflow-y: auto;
+    height: 50vh;
+  }

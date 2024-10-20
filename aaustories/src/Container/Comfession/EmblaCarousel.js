@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom'; // Use useNavigate for redirection
+import { useNavigate } from 'react-router-dom';
 import useEmblaCarousel from 'embla-carousel-react';
 import ClassNames from 'embla-carousel-class-names';
 import {
@@ -17,9 +17,9 @@ const EmblaCarousel = (props) => {
   const [confessions, setConfessions] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const navigate = useNavigate(); // Create history object for navigation
+  const navigate = useNavigate();
 
-  const MAX_TEXT_LENGTH = 550; // Set your character limit here
+  const MAX_TEXT_LENGTH = 550;
 
   const { selectedIndex, scrollSnaps, onDotButtonClick } = useDotButton(emblaApi);
   const {
@@ -29,9 +29,26 @@ const EmblaCarousel = (props) => {
     onNextButtonClick
   } = usePrevNextButtons(emblaApi);
 
+  // Fetch read confession IDs from localStorage
+  const getReadConfessions = () => {
+    const readConfessions = localStorage.getItem('readConfessions');
+    return readConfessions ? JSON.parse(readConfessions) : [];
+  };
+
+  // Save read confession ID in localStorage
+  const markAsRead = (confessionId) => {
+    const readConfessions = getReadConfessions();
+    const updatedReadConfessions = [...readConfessions, confessionId];
+    localStorage.setItem('readConfessions', JSON.stringify(updatedReadConfessions));
+  };
+
   const fetchConfessions = async () => {
+    setLoading(true);
     try {
-      const response = await axios.get('http://localhost:5000/api/users/get-all-confessions');
+      const readConfessions = getReadConfessions(); // Get list of read confessions
+      const response = await axios.post('http://localhost:5000/api/users/get-random-confessions', {
+        exclude: readConfessions // Send read confessions to backend to exclude
+      });
       setConfessions(response.data);
     } catch (error) {
       console.error('Error fetching confessions:', error);
@@ -54,10 +71,11 @@ const EmblaCarousel = (props) => {
   };
 
   const handleReadMore = (id) => {
-    navigate(`/confession/${id}`); // Redirect to the full confession page
+    markAsRead(id); // Mark confession as read
+    navigate(`/confession/${id}`); // Redirect to full confession page
   };
 
-  if (loading) return <div  className="embla_">Loading confessions...</div>;
+  if (loading) return <div className="embla_">Loading confessions...</div>;
   if (error) return <div>{error}</div>;
 
   return (
@@ -68,10 +86,10 @@ const EmblaCarousel = (props) => {
             <div key={confession._id} className='embla___slide embla___class-names'>
               <p>
                 {confession.text.length > MAX_TEXT_LENGTH
-                  ? `${confession.text.substring(0, MAX_TEXT_LENGTH)}...` // Show limited text
+                  ? `${confession.text.substring(0, MAX_TEXT_LENGTH)}...`
                   : confession.text}
               </p>
-              {confession.text.length > MAX_TEXT_LENGTH && ( // Show "Read More" button if text exceeds limit
+              {confession.text.length > MAX_TEXT_LENGTH && (
                 <button onClick={() => handleReadMore(confession._id)} className="read-more-button">
                   Read More
                 </button>
@@ -86,8 +104,6 @@ const EmblaCarousel = (props) => {
           <PrevButton onClick={onPrevButtonClick} disabled={prevBtnDisabled} />
           <NextButton onClick={onNextButtonClick} disabled={nextBtnDisabled} />
         </div>
-
-    
       </div>
     </div>
   );

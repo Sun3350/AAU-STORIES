@@ -11,6 +11,8 @@ import Donation from './Container/Donation/Donation';
 import CreateUser from './Container/Upload/Upload';
 import FullConfession from './Container/Comfession/Confession[';
 import Footer from './Container/Footer/Footer';
+import Admin from './Container/Admin/Admin';
+import QuestionDetails from './Container/Home/Question';
 
 const AppContent = () => {
  
@@ -24,8 +26,10 @@ const AppContent = () => {
           <Route path="/upload" element={<CreateUser />} />
           <Route path="/comfession" element={<Comfession />} />
           <Route path="/confession/:id" element={<FullConfession />} />
+          <Route path="/question/:id" element={<QuestionDetails />} />
           <Route path="/memes" element={<Memes />} />
           <Route path="/donation" element={<Donation />} />
+          <Route path="/admin" element={<Admin />} />
         </Routes>
       <Footer/>
     </>

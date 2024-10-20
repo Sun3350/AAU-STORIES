@@ -1,108 +1,162 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import data from '@emoji-mart/data'
-import Picker from '@emoji-mart/react'
+import { useNavigate } from 'react-router-dom';
+import { motion } from 'framer-motion';
+import logo from '../../Images/Logo.png';
+import { FaShare } from "react-icons/fa";
+
+
 const FullConfession = () => {
   const [confession, setConfession] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [tex, setTex] = useState(''); // Text state for the comment input
+  const [tex, setTex] = useState('');
   const [commentLoading, setCommentLoading] = useState(false);
   const [commentError, setCommentError] = useState(null);
-  const [showEmojiPicker, setShowEmojiPicker] = useState(false); // State to show/hide emoji picker
 
-  // Function to manually extract confessionId from the URL
-  const getConfessionIdFromPath = () => {
-    const pathnameArray = window.location.pathname.split('/');
-    return pathnameArray[pathnameArray.length - 1]; // The last part of the URL
-  };
-
-  // Fetch confession from the backend
   const fetchConfession = async () => {
-    const confessionId = getConfessionIdFromPath(); // Get the confessionId
+    const confessionId = window.location.pathname.split('/').pop();
     try {
       const response = await axios.get(`http://localhost:5000/api/users/confession/${confessionId}`);
       setConfession(response.data);
     } catch (error) {
-      console.error('Error fetching confession:', error);
       setError('Could not fetch confession. Please try again later.');
     } finally {
       setLoading(false);
     }
   };
 
-  // Handle comment submission
   const handleCommentSubmit = async (e) => {
     e.preventDefault();
     setCommentLoading(true);
-    setCommentError(null); // Reset comment error state
-
-    const confessionId = getConfessionIdFromPath(); // Manually get confessionId again
+    const confessionId = window.location.pathname.split('/').pop();
 
     try {
       await axios.post(
         `http://localhost:5000/api/users/confessions/${confessionId}/confession-comment`,
-        { tex } // Sending the comment data with emoji support
+        { tex }
       );
-      setTex(''); // Clear the input field after submission
-      fetchConfession(); // Refetch the confession to get the latest comments
+      setTex('');
+      fetchConfession();
     } catch (error) {
-      console.error('Error adding comment:', error);
       setCommentError('Could not add your comment. Please try again.');
     } finally {
       setCommentLoading(false);
     }
   };
 
-  // Handle adding emoji to the input
-
-  const addEmoji = (emoji) => {
-    // Append the selected emoji to the current text
-    setTex((prevText) => prevText + emoji.native);
-  };
-
   useEffect(() => {
     fetchConfession();
-  }, []); // Only run once when the component mounts
+  }, []);
+
+  const navigate = useNavigate();
+  
+  const handleNavigation = () => {
+    navigate('/comfession');
+  };
+
+  const handleShare = async () => {
+    if (navigator.share) {
+      try {
+        await navigator.share({
+          title: 'Check out this confession!',
+          text: confession.text,
+          url: window.location.href, // Share current page URL
+        });
+        console.log('Confession shared successfully!');
+      } catch (error) {
+        console.error('Error sharing confession:', error);
+      }
+    } else {
+      alert('Sharing is not supported on this browser.');
+    }
+  };
 
   if (loading) return <div>Loading...</div>;
   if (error) return <div>{error}</div>;
 
   return (
-    <div>
-      <h1>Confession Details</h1>
-      <p>{confession.text}</p>
+    <div className='single-main-confession-container'>
+      <motion.div
+        className="header w-full flex justify-between items-center"
+        initial={{ y: -100, opacity: 0 }}
+        animate={{ y: 0, opacity: 1, transition: { duration: 0.6 } }}
+      >
+        <a className="text-[#ffffff] font-bold" href="/">Close</a>
+       
+        <motion.button
+          className="header-button bg-[#ffff] text-[#015daa] font-bold"
+          onClick={handleNavigation}
+          whileHover={{ scale: 1.1 }}
+          whileTap={{ scale: 0.9 }}
+        >
+          Talk
+        </motion.button>
+      </motion.div>
+
+      <div className='single-confession-container'>
+        <motion.div
+          className='confession-container'
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 1 }}
+        >
+          <img className='logo' src={logo} alt="" />
+          <div className='w-full text-white border border-white p-5 rounded-md mt-5'>
+            <p>{confession.text}</p>
+          </div>
+          
+          {/* Share Button */}
+        
+        </motion.div>
       
-      <form onSubmit={handleCommentSubmit}>
-        <input
-          value={tex}
-          onChange={(e) => setTex(e.target.value)}
-          placeholder="Add a comment..."
-          required
-          rows={3}
-        />
+        {/* Comment Section */}
+        <motion.div
+          className='comment-section sticky-comment'
+          initial={{ opacity: 0, y: 50 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8 }}
+        >
+          <form onSubmit={handleCommentSubmit} className='flex w-full mb-10'>
+            <textarea
+              value={tex}
+              onChange={(e) => setTex(e.target.value)}
+              placeholder="Add a comment..."
+              required
+              rows={3}
+              className='comment-input'
+            />
+            <button type="submit" disabled={commentLoading}>Comment</button>
+          </form>
+        </motion.div>
 
-        {/* Button to toggle emoji picker */}
-        <button type="button" onClick={() => setShowEmojiPicker(!showEmojiPicker)}>
-          {showEmojiPicker ? 'Hide Emojis' : 'Add Emoji'}
-        </button>
-
-        {/* Show Emoji Picker when the button is clicked */}
-        {showEmojiPicker && <Picker data={data} onSelect={addEmoji} />}
-
-        <button type="submit" disabled={commentLoading}>Comment</button>
-      </form>
-
-      {commentLoading && <p>Adding comment...</p>}
-      {commentError && <p>{commentError}</p>}
-
-      {confession.comments && confession.comments.length > 0 ? (
-        confession.comments.map((comment) => (
-          <p key={comment._id}>Comment: {comment.tex}</p> // Use comment ID as key if available
-        ))
-      ) : (
-        <p>No comments yet.</p>
-      )}
+        <motion.div
+          className='comments-container'
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 1 }}
+        >
+          {commentLoading && <p>Adding comment...</p>}
+          {commentError && <p>{commentError}</p>}
+          {confession.comments && confession.comments.length > 0 ? (
+            confession.comments.map((comment) => (
+              <div className='comments' key={comment._id}>
+                <p>{comment.tex}</p>
+              </div>
+            ))
+          ) : (
+            <p>No comments yet.</p>
+          )}
+        </motion.div>
+      </div>
+      <motion.button
+            className="share-button fixed bottom-20 right-10 bg-white text-[#105daa] font-bold py-2 px-4 rounded mt-4"
+            onClick={handleShare}
+            whileHover={{ scale: 1.1 }}
+            whileTap={{ scale: 0.9 }}
+          >
+            <FaShare />
+          </motion.button>
     </div>
   );
 };

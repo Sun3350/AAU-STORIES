@@ -38,3 +38,15 @@ h3{
   color: white;
   text-transform: uppercase;
 }
+p{
+  color: white;
+}
+textarea{
+  resize: none;
+  width: 100%;
+  padding: none;
+}
+textarea:focus{
+  outline: none;
+ 
+}

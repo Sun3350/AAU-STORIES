@@ -6,20 +6,28 @@ const { CloudinaryStorage } = require('multer-storage-cloudinary');
 const router = express.Router();
 const multer = require('multer');
 const Confession = require('../model/Comfession')
-// Set up storage for multer
+const Topic = require('../model/Topic');
+const Meme = require('../model/Meme')
+
+
 const storage = new CloudinaryStorage({
-    cloudinary: cloudinary,
-    params: {
-      folder: 'Blog Image',
-      format: async (req, file) => 'jpg', // supports promises as well
-      public_id: (req, file) => Date.now().toString(),
-    },
-  });
+  cloudinary: cloudinary,
+  params: async (req, file) => {
+    let folder = 'Blog Image';
+    let format = file.mimetype.startsWith('video') ? 'mp4' : 'jpg'; // Set format based on file type
+
+    return {
+      folder: folder,
+      format: format,
+      public_id: Date.now().toString(),
+      resource_type: file.mimetype.startsWith('video') ? 'video' : 'image', // Set resource_type accordingly
+    };
+  },
+})
   
-
-
-// Initialize multer
+ 
 const upload = multer({ storage: storage });
+
 
 router.post('/search', async (req, res) => {
     const { gender, location } = req.body;
@@ -89,12 +97,18 @@ router.post('/users', upload.single('image'), async (req, res) => {
   });
   
   // Get all confessions
-  router.get('/get-all-confessions', async (req, res) => {
+  router.post('/get-random-confessions', async (req, res) => {
+    const { exclude } = req.body; // List of read confession IDs to exclude
+  
     try {
-      const confessions = await Confession.find();
-      res.json(confessions);
+      // Fetch random confessions excluding the ones read by the user
+      const confessions = await Confession.find({ _id: { $nin: exclude } })
+        .sort({ createdAt: -1 }) // Optional: Order by creation date
+        .limit(10); // Adjust the limit as needed
+  
+      res.status(200).json(confessions);
     } catch (error) {
-      res.status(500).json({ message: 'Error fetching confessions' });
+      res.status(500).json({ error: 'Failed to fetch confessions' });
     }
   });
   
@@ -128,5 +142,124 @@ router.post('/users', upload.single('image'), async (req, res) => {
     }
 });
 
-  
+router.post('/topics', async (req, res) => {
+  try {
+    const { content } = req.body;
+
+    await Topic.deleteMany({});
+
+    // Create and save the new topic
+    const newTopic = new Topic({ content });
+    await newTopic.save();
+
+    res.status(201).json(newTopic);
+  } catch (error) {
+    res.status(400).json({ message: 'Error submitting topic' });
+  }
+});
+
+
+router.get('/get-topics', async (req, res) => {
+  try {
+    const topics = await Topic.find();
+    res.json(topics);
+  } catch (error) {
+    res.status(500).json({ message: 'Error fetching topics' });
+  }
+});
+router.get('/topics/:id', async (req, res) => {
+  try {
+    const topic = await Topic.findById(req.params.id);
+    if (!topic) return res.status(404).json({ message: 'Topic not found' });
+    res.json(topic);
+  } catch (error) {
+    res.status(500).json({ message: 'Server error' });
+  }
+});
+
+// Add a comment to a topic
+router.post('/topics/:id/comment', async (req, res) => {
+  try {
+    const { text } = req.body;
+    const topic = await Topic.findById(req.params.id);
+    topic.comments.push({ text });
+    await topic.save();
+    res.status(201).json(topic);
+  } catch (error) {
+    res.status(400).json({ message: 'Error adding comment' });
+  }
+});
+
+
+router.get('/meme', async (req, res) => {
+  const memes = await Meme.aggregate([{ $sample: { size: 10 } }]); // Get random memes
+  res.json(memes);
+});
+
+// Upload a new meme
+router.post('/upload-meme', upload.single('file'), async (req, res) => {
+  try {
+      if (!req.file) {
+          return res.status(400).json({ error: 'No file uploaded' });
+      }
+
+      // Create a new Meme instance
+      const meme = new Meme({
+          type: req.file.mimetype.startsWith('video') ? 'video' : 'image',
+          url: req.file.path, // Use the Cloudinary URL returned in req.file.path
+          caption: req.body.caption,
+      });
+
+      // Save to the database
+      await meme.save();
+
+      // Send a success response
+      res.status(201).json(meme);
+  } catch (error) {
+      console.error('Upload error:', JSON.stringify(error, null, 2)); // Log the error as a JSON string
+
+      // Send a detailed error response
+      res.status(500).json({
+          error: error.message || 'An unknown error occurred while uploading the meme',
+          details: error, // Include additional error details for troubleshooting
+      });
+  }
+});
+
+
+// Like a meme
+router.post('/meme/:id/like', async (req, res) => {
+  const meme = await Meme.findById(req.params.id);
+  meme.likes += 1;
+  await meme.save();
+  res.json(meme);
+});
+
+// Comment on a meme
+router.post('/meme/:id/comment', async (req, res) => {
+  const meme = await Meme.findById(req.params.id);
+  meme.comments.push(req.body);
+  await meme.save();
+  res.json(meme);
+});
+
+
+
+  // Backend: Schedule job to delete confessions older than 24 hours
+const cron = require('node-cron');
+
+cron.schedule('0 0 * * *', async () => {
+  const cutoffDate = new Date();
+  cutoffDate.setHours(cutoffDate.getHours() - 24);
+
+  try {
+    await Confession.deleteMany({ createdAt: { $lt: cutoffDate } });
+    console.log('Deleted old confessions');
+  } catch (error) {
+    console.error('Error deleting old confessions:', error);
+  }
+});
+
 module.exports = router;
+
+

@@ -1,0 +1,84 @@
+.meme-main-container{
+    color: #015add;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    flex-direction: column;
+}
+.meme-container{
+    width: 70%;
+    height: 100%;
+     display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.emblameme {
+    max-width: 20rem;
+    margin: auto;
+    --slide-height: 35rem;
+    --slide-spacing: 1rem;
+    --slide-size: 100%;
+  }
+  .emblaviewport {
+    overflow: hidden;
+  }
+  .emblacontainer {
+    display: flex;
+    touch-action: pan-x pinch-zoom;
+    margin-top: calc(var(--slide-spacing) * -1);
+    height: calc(var(--slide-spacing) + var(--slide-height));
+    flex-direction: column;
+  
+    
+  }
+  .emblaslide {
+    transform: translate3d(0, 0, 0);
+    flex: 0 0 var(--slide-size);
+    min-height: 0;
+    padding-top: 5vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    border-radius: 10px;
+  }
+  .emblaslidenumber {
+    box-shadow: inset 0 0 0 0.2rem var(--detail-medium-contrast);
+    border-radius: 1.8rem;
+    font-size: 4rem;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+    user-select: none;
+  }
+ 
+
+
+
+
+
+
+
+
+
+
+  .content-container{
+    background-color:#015add;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 10px;
+  }
+  .like-btn{
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    background-color: white;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+  }
