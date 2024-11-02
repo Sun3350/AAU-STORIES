@@ -1,0 +1,55 @@
+.blog-main-container{
+   display: flex;
+   justify-content: center;
+   align-items: center;
+   flex-direction: column;
+}
+.main-blog-container{
+    width: 90%;
+    height: 70vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    object-fit: inherit;
+    object-position: center;
+    margin-top: 2vh;
+    border-radius: 10px;
+}
+.main-blog-image{
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    object-fit: cover;
+    object-position: center;
+    top: 0;
+    z-index: -1;
+    border-radius: 10px;
+
+}
+
+.main-blog-dec{
+    width: 100%;
+    height: 100%;
+    border-radius: 10px;
+    background: linear-gradient(180deg, rgba(0,0,0,1) 0%, rgba(0,0,0,1) 0%, rgba(0,0,0,0) 0%, rgba(1,93,170,0.6699054621848739) 100%);
+    padding: 20px;
+    display: flex;
+    justify-content: end;
+    flex-direction: column;
+}
+
+/* Custom styles for React Quill */
+.custom-quill {
+   margin-top: 2vh;/* Text color */
+}
+
+/* Placeholder color */
+.custom-quill .ql-editor::before {
+    color: rgba(16, 93, 218, 0.5); /* Placeholder color */
+}
+.ql-editor p{
+    color: #105daa; /* Text color */
+ 
+}

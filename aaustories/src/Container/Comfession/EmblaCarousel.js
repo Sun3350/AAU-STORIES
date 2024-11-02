@@ -69,6 +69,10 @@ const EmblaCarousel = (props) => {
       )
     );
   };
+  useEffect(() => {
+    if (emblaApi) emblaApi.reInit();
+  }, [confessions, emblaApi]);
+  
 
   const handleReadMore = (id) => {
     markAsRead(id); // Mark confession as read

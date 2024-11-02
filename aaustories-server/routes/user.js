@@ -8,6 +8,14 @@ const multer = require('multer');
 const Confession = require('../model/Comfession')
 const Topic = require('../model/Topic');
 const Meme = require('../model/Meme')
+const Blog = require('../model/Blog');
+const bcrypt = require('bcrypt');
+const jwt = require('jsonwebtoken');
+const AdminUser = require('../model/AdminUser');
+const  generateRandomSecret = require('../config/generateSecretKey')
+
+const secretKey = generateRandomSecret();
+console.log('Generated Secret Key:', secretKey); 
 
 
 const storage = new CloudinaryStorage({
@@ -241,6 +249,136 @@ router.post('/meme/:id/comment', async (req, res) => {
   meme.comments.push(req.body);
   await meme.save();
   res.json(meme);
+});
+
+
+
+
+//Blog endpoint
+
+router.post('/create-blog',  upload.single('image'),async (req, res) => {
+  try {
+      const { title, content, author, categories } = req.body;
+      const imageUrl = req.file.path;
+
+      const newBlog = new Blog({
+          title,
+          content,
+          author,
+          categories,
+          blogImage:imageUrl,
+          
+      });
+
+      const savedBlog = await newBlog.save();
+      res.status(201).json(savedBlog);
+  } catch (error) {
+      res.status(500).json({ message: 'Error creating blog post', error });
+  }
+});
+
+// Get all blog posts
+router.get('/get-all-blog', async (req, res) => {
+  try {
+      const blogs = await Blog.find();
+      res.json(blogs);
+  } catch (error) {
+      res.status(500).json({ message: 'Error fetching blogs', error });
+  }
+});
+
+// Update a blog post
+router.put('/update-blog/:id', async (req, res) => {
+  try {
+      const { title, description, content, author, categories, blogImage } = req.body;
+      const updatedBlog = await Blog.findByIdAndUpdate(
+          req.params.id,
+          { title, description, content, author, categories, blogImage },
+          { new: true }
+      );
+
+      if (!updatedBlog) {
+          return res.status(404).json({ message: 'Blog post not found' });
+      }
+
+      res.json(updatedBlog);
+  } catch (error) {
+      res.status(500).json({ message: 'Error updating blog post', error });
+  }
+});
+
+// Example Express route
+router.get('/get-latest-blog', async (req, res) => {
+  try {
+      const latestBlog = await Blog.findOne().sort({ createdAt: -1 }); // Assuming 'createdAt' is your date field
+      res.json(latestBlog);
+  } catch (error) {
+      res.status(500).json({ message: 'Error fetching latest blog' });
+  }
+});
+
+// Delete a blog post
+router.delete('/delete-blog/:id', async (req, res) => {
+  try {
+      const deletedBlog = await Blog.findByIdAndDelete(req.params.id);
+
+      if (!deletedBlog) {
+          return res.status(404).json({ message: 'Blog post not found' });
+      }
+
+      res.json({ message: 'Blog post deleted successfully' });
+  } catch (error) {
+      res.status(500).json({ message: 'Error deleting blog post', error });
+  }
+});
+
+//Admin Register
+
+router.post('/register', async (req, res) => {
+  const { username, password } = req.body;
+
+  // Validate input
+  if (!username || !password) {
+    return res.status(400).json({ message: 'Username and password are required.' });
+  }
+
+  try {
+    // Check if the user already exists
+    const existingUser = await AdminUser.findOne({ username });
+    if (existingUser) {
+      return res.status(400).json({ message: 'Username is already taken.' });
+    }
+
+    // Hash the password
+    const hashedPassword = await bcrypt.hash(password, 10);
+
+    // Create a new user
+    const newUser = new AdminUser({ username, password: hashedPassword });
+    await newUser.save();
+
+    // Respond with success
+    res.status(201).json({ message: 'User registered successfully!' });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: 'Server error, please try again later.' });
+  }
+});
+
+// Login Route
+router.post('/admin-login', async (req, res) => {
+  const { username, password } = req.body;
+
+  // Check if the user exists
+  const existingUser = await AdminUser.findOne({ username });
+  if (!existingUser) return res.status(401).json({ error: 'Invalid credentials' });
+
+  // Check password
+  const validPassword = await bcrypt.compare(password, existingUser.password);
+  if (!validPassword) return res.status(401).json({ error: 'Invalid credentials' });
+
+  // Generate a token
+  const token = jwt.sign({ username: existingUser.username }, secretKey, { expiresIn: '1h' }); // Use the generated secret key
+  res.json({ token });
 });
 
 

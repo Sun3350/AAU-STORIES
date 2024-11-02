@@ -13,35 +13,45 @@ import FullConfession from './Container/Comfession/Confession[';
 import Footer from './Container/Footer/Footer';
 import Admin from './Container/Admin/Admin';
 import QuestionDetails from './Container/Home/Question';
-
-const AppContent = () => {
- 
-  return (
-    <>
-     
-     
-        <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="/linkup" element={<LinkUp />} />
-          <Route path="/upload" element={<CreateUser />} />
-          <Route path="/comfession" element={<Comfession />} />
-          <Route path="/confession/:id" element={<FullConfession />} />
-          <Route path="/question/:id" element={<QuestionDetails />} />
-          <Route path="/memes" element={<Memes />} />
-          <Route path="/donation" element={<Donation />} />
-          <Route path="/admin" element={<Admin />} />
-        </Routes>
-      <Footer/>
-    </>
-  );
-};
+import Blog from './Container/Blog/Blog';
+import PostQuestion from './Container/Admin/PostQuestion/PostQuestion';
+import CreateBlog from './Container/Blog/CreateBlog';
+import AllBlogs from './Container/Admin/AllBlog/AllBlogs';
+import ProtectedRoute from './utils/ProtectedRoute';
+import AdminLogin from './Container/Admin/AdminLogin';
 
 const App = () => {
+ 
   return (
     <Router>
-      <AppContent />
-    </Router>
+    <Routes>
+    <Route path="/" element={<Home />} />
+    <Route path="/blog" element={<Blog />} />
+    <Route path="/linkup" element={<LinkUp />} />
+    <Route path="/upload" element={<CreateUser />} />
+    <Route path="/comfession" element={<Comfession />} />
+    <Route path="/confession/:id" element={<FullConfession />} />
+    <Route path="/question/:id" element={<QuestionDetails />} />
+    <Route path="/memes" element={<Memes />} />
+    <Route path="/donation" element={<Donation />} />
+    <Route path="/admin/*" element={<AdminLayout />} />
+    <Route path="/admin/login" element={<AdminLogin />} />
+
+  </Routes>
+  <Footer/>
+  </Router>
   );
 };
 
+const AdminLayout = () => (
+  <ProtectedRoute>
+  <Admin>
+    <Routes>
+      <Route path="create-blog" element={<CreateBlog />} />
+      <Route path="question" element={<PostQuestion />} />
+      <Route path="all-blog-posted" element={<AllBlogs />} />
+    </Routes>
+  </Admin>
+  </ProtectedRoute>
+)
 export default App;

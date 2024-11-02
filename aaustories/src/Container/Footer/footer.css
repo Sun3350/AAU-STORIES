@@ -9,3 +9,16 @@
 .social-text{
     font-weight: 600;
 }
+
+@media only screen and (max-width: 768px){
+    .social-text{
+        display: none;
+        
+    }
+    .footer-container{
+        height: 20px;
+    }
+    .social-footer-icon{
+        margin: 0;
+    }
+}

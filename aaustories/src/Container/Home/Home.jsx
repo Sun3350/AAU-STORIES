@@ -4,6 +4,8 @@ import { Link, useNavigate } from 'react-router-dom'; // Import Link and useNavi
 import './home.css';
 import logo from '../../Images/Logo.png';
 import { FiSend } from "react-icons/fi";
+import { FaBars, FaTimes } from 'react-icons/fa'; // Importing icons from react-icons
+
 import axios from 'axios';
 
 const Home = () => {
@@ -26,6 +28,24 @@ const Home = () => {
     })
   };
 
+  const navbarVariants = {
+    hidden: { x: '-100%', opacity: 0 },
+    visible: { 
+      x: 0, 
+      opacity: 1,
+      transition: {
+        type: 'spring',
+        stiffness: 300,
+        damping: 30,
+        duration: 0.6,
+        when: 'beforeChildren',
+        staggerChildren: 0.1,
+      }
+    }
+  };
+
+  
+
   const textVariants = {
     hidden: { x: -100, opacity: 0 },
     visible: (i) => ({
@@ -34,8 +54,13 @@ const Home = () => {
       transition: { delay: i * 0.3, type: 'spring', stiffness: 50, damping: 10 }
     })
   };
+  const [isOpen, setIsOpen] = useState(false);
 
+  const toggleNavbar = () => {
+    setIsOpen(!isOpen);
+  };
   const buttons = [
+    { text: 'Blog', color: 'bg-rose-600 link-up', link: '/blog' }, // Add links
     { text: 'Link Up', color: 'bg-rose-600 link-up', link: '/linkup' }, // Add links
     { text: 'Comfession', color: 'bg-black comfess', link: '/comfession' },
     { text: 'Memes', color: 'bg-blue-700 memes', link: '/memes' },
@@ -78,11 +103,43 @@ const Home = () => {
 
   return (
     <div className='w-full home-main-container'>
+     <div className="mobile-navbar">
+      <button className="hamburger" onClick={() => setIsOpen(true)}>
+        <FaBars />
+      </button>
+      <motion.div
+        className={`navbar ${isOpen ? 'open' : ''}`}
+        initial="hidden"
+        animate={isOpen ? 'visible' : 'hidden'}
+        variants={navbarVariants}
+      >
+        <div onClick={() => setIsOpen(false)} className="close-icon text-white border-white">
+          <FaTimes />
+        </div>
+        <ul>
+          {buttons.map((button, index) => (
+            <motion.li
+              className="nav-li"
+              key={index}
+              variants={buttonVariants}
+            >
+              <a
+                href={button.link}
+                onClick={() => setIsOpen(false)}
+                className="button-link"
+              >
+                {button.text}
+              </a>
+            </motion.li>
+          ))}
+        </ul>
+      </motion.div>
+    </div>
       <div className='w-full flex justify-center items-center home-container shadow-2xl'>
-        <div className='first-home-container'>
+        <div className='first-home-container p-6'>
           {/* Logo animation */}
           <motion.img
-            className='logo'
+            className='home-logo'
             src={logo}
             alt='Logo'
             variants={logoVariants}
@@ -112,7 +169,7 @@ const Home = () => {
                 animate='visible'
                 custom={index + 1} // Start delay for each topic (1, 2, 3...)
               >
-                <p className='mt-5 mb-4 text-2xl font-bold'>{content}</p>
+                <p className='mt-5 mb-4 text-2xl font-bold text-center'>{content}</p>
                 <form onSubmit={(e) => handleCommentSubmit(e, _id)} className='flex w-full justify-center items-center'>
                   <textarea
                     type="text"
@@ -138,9 +195,10 @@ const Home = () => {
         </div>
 
         <div className='second-home-container'>
-          <div className='buttons flex flex-col'>
+          <div className='buttons flex flex-wrap justify-center items-center'>
             {buttons.map((button, index) => (
-              <motion.button
+               <a href={button.link} className="button-link">
+             <motion.button
                 key={index}
                 className={button.color}
                 custom={index}
@@ -148,10 +206,10 @@ const Home = () => {
                 initial='hidden'
                 animate='visible'
               >
-                <Link to={button.link} className="button-link">
                   {button.text}
-                </Link>
-              </motion.button>
+              </motion.button>                
+              </a>
+
             ))}
           </div>
         </div>

@@ -3,12 +3,26 @@ import axios from 'axios';
 import './meme.css';
 
 const MemeItem = ({ meme }) => {
-    const [likeCount, setLikeCount] = useState(meme.likes); // State for likes
+    const [likeCount, setLikeCount] = useState(meme.likes);
+    const [hasInteracted, setHasInteracted] = useState(false); // Track user interaction
+    const videoRef = useRef(null);
+    const [isPlaying, setIsPlaying] = useState(false);
+
+    // Handle user interaction to allow autoplay
+    useEffect(() => {
+        const handleUserInteraction = () => {
+            setHasInteracted(true);
+            document.removeEventListener('click', handleUserInteraction);
+        };
+
+        document.addEventListener('click', handleUserInteraction);
+        return () => document.removeEventListener('click', handleUserInteraction);
+    }, []);
 
     const handleLike = async () => {
         try {
             await axios.post(`http://localhost:5000/api/users/meme/${meme._id}/like`);
-            setLikeCount((prevCount) => prevCount + 1); // Update the like count locally
+            setLikeCount((prevCount) => prevCount + 1);
         } catch (error) {
             console.error('Failed to like the meme:', error);
         }
@@ -25,22 +39,18 @@ const MemeItem = ({ meme }) => {
         }
     };
 
-    const videoRef = useRef(null);
-    const [isPlaying, setIsPlaying] = useState(false);
-    const [isVisible, setIsVisible] = useState(false);
-
+    // Intersection Observer for autoplay on scroll
     useEffect(() => {
         const observer = new IntersectionObserver(
             (entries) => {
                 entries.forEach((entry) => {
-                    if (entry.isIntersecting) {
+                    if (entry.isIntersecting && hasInteracted) {
+                        videoRef.current.currentTime = 0; // Restart video
                         videoRef.current.play();
                         setIsPlaying(true);
-                        setIsVisible(true);
-                    } else {
+                    } else if (!entry.isIntersecting) {
                         videoRef.current.pause();
                         setIsPlaying(false);
-                        setIsVisible(false);
                     }
                 });
             },
@@ -56,7 +66,7 @@ const MemeItem = ({ meme }) => {
                 observer.unobserve(videoRef.current);
             }
         };
-    }, []);
+    }, [hasInteracted]);
 
     const togglePlayPause = () => {
         if (isPlaying) {
@@ -78,6 +88,7 @@ const MemeItem = ({ meme }) => {
                         loop
                         style={{ width: '100%', height: 'auto' }}
                         onClick={togglePlayPause}
+                        playsInline
                     />
                     <button
                         onClick={togglePlayPause}
@@ -93,26 +104,25 @@ const MemeItem = ({ meme }) => {
                             fontSize: '24px',
                             padding: '10px',
                             cursor: 'pointer',
-                            display: isVisible ? 'block' : 'none',
+                            display: isPlaying ? 'none' : 'block',
                         }}
                     >
-                        {isPlaying ? '' : 'Play'}
+                        Play
                     </button>
                 </div>
             ) : (
                 <img src={meme.url} alt={meme.caption} style={{ width: '100%', height: 'auto' }} />
             )}
             <div className='absolute bottom-0 top-0 h-full w-full p-2 rounded items-end flex'>
-                <div style={{width: '95%', height:'20vh'}} className='bg-black'>
-                <h3>{meme.caption}</h3>
+                <div style={{ width: '95%', height: '20vh' }} className='bg-black'>
+                    <h3>{meme.caption}</h3>
                 </div>
-               <div className='flex flex-col justify-center items-center' style={{width:'20%'}}>
-               <button className='like-btn' onClick={handleLike}>Like ({likeCount})</button>
-                <a href={meme.url} download style={{ marginTop: '10px', display: 'inline-block' }}>
-                    <button>Download Meme</button>
-                </a>
-               </div>
-               
+                <div className='flex flex-col justify-center items-center' style={{ width: '20%' }}>
+                    <button className='like-btn' onClick={handleLike}>Like ({likeCount})</button>
+                    <a href={meme.url} download style={{ marginTop: '10px', display: 'inline-block' }}>
+                        <button>Download Meme</button>
+                    </a>
+                </div>
             </div>
         </div>
     );
