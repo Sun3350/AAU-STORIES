@@ -78,7 +78,9 @@
     align-items: flex-start;
     justify-content: start;
   }
-  
+  .home-logo{
+    width: 30%;
+  }
   .navbar ul {
     list-style: none;
     padding: 0;
