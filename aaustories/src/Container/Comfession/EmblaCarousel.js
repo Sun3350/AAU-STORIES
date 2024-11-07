@@ -74,7 +74,7 @@ const EmblaCarousel = (props) => {
       setConfessions(response.data);
     } catch (error) {
       console.error('Error fetching confessions:', error);
-      setError('Could not fetch confessions. Please try again later.');
+      setError('No Confessions. Please check back later.');
     } finally {
       setLoading(false);
     }
@@ -102,7 +102,7 @@ const EmblaCarousel = (props) => {
   };
 
   if (loading) return <div className="embla_">Loading confessions...</div>;
-  if (error) return <div>{error}</div>;
+  if (error) return <div className="embla_">{error}</div>;
 
   return (
     <div className="embla_">
