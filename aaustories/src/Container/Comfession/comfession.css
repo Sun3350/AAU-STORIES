@@ -16,7 +16,6 @@
     box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
     padding: 2vh 0vh 5vh 0vh;
     position: absolute;
-    top: 12vh;
    z-index: 2;
 
 }
@@ -232,7 +231,10 @@
       width: 100%;
       padding: 0px 10px 0px 10px;
     }
-    
+    .comfession-popup{
+      width: 98%;
+      padding: 2vh;
+    }
   }
   @media only screen and (max-width: 550px){
     .single-main-confession-container{

@@ -104,7 +104,7 @@ const Comfession = () => {
               />
             </div>
             <img src={logo} className="logo" alt="Logo" />
-            <h2>Tell it to us (Strictly Anonymous)</h2>
+            <h2 className='text-center'>Tell it to us (Strictly Anonymous)</h2>
             <motion.div
               className="input-container h-full w-full max-w-md sm:p-8 lg:p-5"
               variants={formVariants}
