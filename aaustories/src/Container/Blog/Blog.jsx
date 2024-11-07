@@ -28,7 +28,7 @@ const Blog = () => {
   return (
     <div className='blog-main-container'>
  <div className='header w-full flex justify-between items-center bg-[#105daa] h-20  py-2'>
-   <div className='h-full w-16'>  <img className='w-full h-full' src={logo} alt="" />
+   <div className='h-full w-16'> <a href="/"><img className='w-full h-full' src={logo} alt="" /></a>
 </div>
   <div className='flex text-white'>
   <li>Tech</li>

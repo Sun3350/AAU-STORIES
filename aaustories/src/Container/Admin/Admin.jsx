@@ -3,9 +3,10 @@ import { IoSettingsOutline } from 'react-icons/io5';
 import { motion, AnimatePresence } from 'framer-motion';
 import profile from '../../Images/profile.png';
 import { Link, useLocation } from 'react-router-dom';
-import { FaHome, FaUser, FaCog, FaAngleDoubleLeft, FaAngleDoubleRight } from 'react-icons/fa';
+import { FaHome, FaUser, FaCog, FaAngleDoubleLeft, FaAngleDoubleRight, FaBlog, FaBlogger } from 'react-icons/fa';
 import './admin.css';
 import { CiLogout } from "react-icons/ci";
+import { MdPostAdd } from "react-icons/md";
 
 import Blog from '../Blog/Blog';
 import { useDispatch } from 'react-redux';
@@ -23,9 +24,10 @@ const Admin = ({ children }) => {  // Add children to function parameters
 
   const sidebarItems = [
     { path: '/blog', name: 'Home', icon: <FaHome /> },
-    { path: '/admin/create-blog', name: 'Post Blog', icon: <FaUser /> },
-    { path: '/admin/question', name: 'Post Question', icon: <FaCog /> },
-    { path: '/admin/all-blog-posted', name: 'All Blogs', icon: <FaCog /> }
+    { path: '/admin/create-blog', name: 'Post Blog', icon: <FaBlogger /> },
+    { path: '/admin/question', name: 'Post Question', icon: <MdPostAdd />    },
+    { path: '/admin/all-blog-posted', name: 'All Blogs', icon: <FaBlog />
+    }
   ];
 
   const sidebarVariant = {

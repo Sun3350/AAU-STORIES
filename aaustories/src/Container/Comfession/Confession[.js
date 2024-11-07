@@ -79,7 +79,7 @@ const [showComment, setShowComment] = useState(false)
   if (error) return <div>{error}</div>;
 
   return (
-    <div className='single-main-confession-container ' onclick={() => setShowComment(false)}>
+    <div className='single-main-confession-container ' onClick={() => setShowComment(false)}>
       <motion.div
         className="header w-full flex justify-between items-center"
         initial={{ y: -100, opacity: 0 }}

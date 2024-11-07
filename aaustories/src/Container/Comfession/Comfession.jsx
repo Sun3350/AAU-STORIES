@@ -12,66 +12,50 @@ const Comfession = () => {
   const [showPopup, setShowPopup] = useState(false);
   const [searchDone, setSearchDone] = useState(true);
   const [text, setText] = useState('');
-  const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
+  const navigate = useNavigate();
 
-
-  // Check localStorage on component mount for gender, location, and users
-  const handleNavigation = () => {
-    setShowPopup(true); // Show popup again when "Talk" button is clicked
-  };
-
+  // Handle form submission
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setLoading(true); // Set loading to true when submission starts
+
     try {
       await axios.post('https://aau-stories-sever.vercel.app/api/users/submit-comfession', { text });
-      setShowPopup(false)
-      setLoading(true);
-      setTimeout(() => {
-        setLoading(false);
-        // Add your success handling logic here
-      }, 2000);
-
-      setText(''); // Clear text field after submission
+      setLoading(false); // Set loading to false when submission is done
+      setShowPopup(false); // Hide the popup on successful submission
+      setText(''); // Clear the text field
     } catch (error) {
       console.error('Error submitting confession:', error);
+      setLoading(false); // Ensure loading is set to false on error
     }
   };
 
   // Slide-up animation for the popup
   const popupVariants = {
-    hidden: { y: '100%', opacity: 0 }, // Starts from below the screen
+    hidden: { y: '100%', opacity: 0 },
     visible: {
       y: 0,
       opacity: 1,
       transition: { type: 'spring', stiffness: 70, damping: 12, duration: 0.8 }
     },
-    exit: {
-      y: '100%',
-      opacity: 0,
-      transition: { duration: 0.5 }
-    }
+    exit: { y: '100%', opacity: 0, transition: { duration: 0.5 } }
   };
 
   // Variants for animating the carousel
   const carouselVariants = {
-    hidden: { opacity: 0, scale: 0.8 }, // Starts smaller and invisible
+    hidden: { opacity: 0, scale: 0.8 },
     visible: {
       opacity: 1,
       scale: 1,
-      transition: {
-        duration: 0.8,
-        type: 'spring',
-        stiffness: 50,
-        damping: 15
-      }
+      transition: { duration: 0.8, type: 'spring', stiffness: 50, damping: 15 }
     }
   };
 
   // Variants for animating the form elements
   const formVariants = {
-    hidden: { opacity: 0, x: -20 }, // Starts slightly off-screen to the left
-    visible: { opacity: 1, x: 0, transition: { duration: 0.5 } }, // Moves to its original position
+    hidden: { opacity: 0, x: -20 },
+    visible: { opacity: 1, x: 0, transition: { duration: 0.5 } }
   };
 
   return (
@@ -86,7 +70,7 @@ const Comfession = () => {
         {searchDone && (
           <motion.button
             className="header-button bg-[#ffff] text-[#015daa] font-bold"
-            onClick={handleNavigation}
+            onClick={() => setShowPopup(true)}
             whileHover={{ scale: 1.1 }}
             whileTap={{ scale: 0.9 }}
           >
@@ -128,20 +112,18 @@ const Comfession = () => {
                   required
                   className="w-full mt-2 p-3 border border-gray-300 rounded-lg focus:ring focus:ring-blue-200 outline-none"
                 />
-                 <form onSubmit={handleSubmit}>
-      <motion.button
-        type="submit"
-        className="w-full p-3 bg-[#015daa] text-white font-semibold rounded-lg shadow-md hover:bg-blue-800 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition"
-        whileHover={{ scale: 1.05 }}
-        disabled={loading} // Disable button when loading
-      >
-        {loading ? (
-          <span className="loader"></span> // Add your loading spinner class here
-        ) : (
-          'Confess'
-        )}
-      </motion.button>
-    </form>
+                <motion.button
+                  type="submit"
+                  className="w-full p-3 bg-[#015daa] text-white font-semibold rounded-lg shadow-md hover:bg-blue-800 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition"
+                  whileHover={{ scale: 1.05 }}
+                  disabled={loading}
+                >
+                  {loading ? (
+                    <span className="loader">loading...</span> // Add your loading spinner class here
+                  ) : (
+                    'Confess'
+                  )}
+                </motion.button>
               </form>
             </motion.div>
           </motion.div>

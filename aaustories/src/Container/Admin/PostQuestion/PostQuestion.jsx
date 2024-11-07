@@ -39,7 +39,7 @@ const PostQuestion = () => {
             animate='visible'
           />
 
-    <form onSubmit={handleSubmit} className='flex flex-col w-[60%] justify-center items-center'>
+    <form onSubmit={handleSubmit} className='flex flex-col w-[100%] justify-center items-center'>
       <textarea
         value={content}
         onChange={(e) => setContent(e.target.value)}
@@ -47,7 +47,7 @@ const PostQuestion = () => {
         required
         className="w-full mt-2 p-3 border border-gray-300 rounded-lg focus:ring focus:ring-blue-200 outline-none"
         />
-      <button type="submit" className='bg-[#105daa] rounded p-5  w-[40%] mt-5'>Post Topic</button>
+      <button type="submit" className='bg-[#105daa] rounded p-5  w-[100%] mt-5'>Post Topic</button>
     </form>
     </div>
   );
