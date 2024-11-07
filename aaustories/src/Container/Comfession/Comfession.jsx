@@ -13,6 +13,8 @@ const Comfession = () => {
   const [searchDone, setSearchDone] = useState(true);
   const [text, setText] = useState('');
   const navigate = useNavigate();
+  const [loading, setLoading] = useState(false);
+
 
   // Check localStorage on component mount for gender, location, and users
   const handleNavigation = () => {
@@ -23,6 +25,13 @@ const Comfession = () => {
     e.preventDefault();
     try {
       await axios.post('https://aau-stories-sever.vercel.app/api/users/submit-comfession', { text });
+      setShowPopup(false)
+      setLoading(true);
+      setTimeout(() => {
+        setLoading(false);
+        // Add your success handling logic here
+      }, 2000);
+
       setText(''); // Clear text field after submission
     } catch (error) {
       console.error('Error submitting confession:', error);
@@ -119,13 +128,20 @@ const Comfession = () => {
                   required
                   className="w-full mt-2 p-3 border border-gray-300 rounded-lg focus:ring focus:ring-blue-200 outline-none"
                 />
-                <motion.button
-                  type="submit"
-                  className="w-full p-3 bg-[#015daa] text-white font-semibold rounded-lg shadow-md hover:bg-blue-800 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition"
-                  whileHover={{ scale: 1.05 }}
-                >
-                  Confess
-                </motion.button>
+                 <form onSubmit={handleSubmit}>
+      <motion.button
+        type="submit"
+        className="w-full p-3 bg-[#015daa] text-white font-semibold rounded-lg shadow-md hover:bg-blue-800 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition"
+        whileHover={{ scale: 1.05 }}
+        disabled={loading} // Disable button when loading
+      >
+        {loading ? (
+          <span className="loader"></span> // Add your loading spinner class here
+        ) : (
+          'Confess'
+        )}
+      </motion.button>
+    </form>
               </form>
             </motion.div>
           </motion.div>
