@@ -104,13 +104,20 @@ const Home = () => {
   }, []); // Dependency array includes no dependencies, so it runs only once
 
   return (
-    <div className='w-full home-main-container'>
-     <div className="mobile-navbar">
+    <div className='w-full home-main-container' >
+     <div className="mobile-navbar " >
       <button className="hamburger" onClick={() => setIsOpen(true)}>
         <FaBars />
       </button>
       <motion.div
-        className={`navbar ${isOpen ? 'open' : ''}`}
+       className={`navbar-container ${isOpen ? 'open' : ''}`}
+       initial="hidden"
+       animate={isOpen ? 'visible' : 'hidden'}
+       variants={navbarVariants}
+       onClick={() => setIsOpen(false)}
+      >
+      <motion.div
+        className='navbar'
         initial="hidden"
         animate={isOpen ? 'visible' : 'hidden'}
         variants={navbarVariants}
@@ -135,6 +142,7 @@ const Home = () => {
             </motion.li>
           ))}
         </ul>
+      </motion.div>
       </motion.div>
     </div>
       <div className='w-full flex justify-center items-center home-container '>
