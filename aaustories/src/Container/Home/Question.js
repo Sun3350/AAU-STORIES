@@ -3,6 +3,8 @@ import { useParams } from 'react-router-dom';
 import axios from 'axios';
 import { FiSend } from "react-icons/fi"; // Import the icon
 import { FiShare2 } from "react-icons/fi"; // Import the share icon
+import { motion } from 'framer-motion';
+import logo from '../../Images/Logo.png';
 
 const QuestionDetails = () => {
   const { id } = useParams(); // Get the topicId from the URL
@@ -13,7 +15,7 @@ const QuestionDetails = () => {
   useEffect(() => {
     const fetchTopicDetails = async () => {
       try {
-        const response = await axios.get(`http://localhost:5000/api/users/topics/${id}`);
+        const response = await axios.get(`https://aau-stories-sever.vercel.app/api/users/topics/${id}`);
         setTopic(response.data);
       } catch (error) {
         console.error('Error fetching topic details:', error);
@@ -49,43 +51,64 @@ const QuestionDetails = () => {
     }
   };
 
-  if (!topic) return <div>Loading...</div>;
+  if (!topic) return <div className='question-load'>Loading...</div>;
 
   return (
-    <div className="container mx-auto p-4">
-      <h2 className="text-2xl font-bold mb-4">{topic.content}</h2>
-
-      {/* Share Button */}
-      <button 
-        onClick={handleShare} 
-        className="mb-4 p-2 text-white bg-green-500 rounded-lg flex items-center"
+    <div className="question-main-container  ">
+      
+      <motion.div
+        className="header w-full flex justify-between items-center"
+        initial={{ y: -100, opacity: 0 }}
+        animate={{ y: 0, opacity: 1, transition: { duration: 0.6 } }}
       >
-        <FiShare2 className="mr-2" />
-        Share
-      </button>
-
-      {/* List of existing comments */}
-      <ul>
-        {topic.comments.map((comment) => (
-          <li key={comment._id} className="border-b border-gray-200 py-2">
-            {comment.text}
-          </li>
-        ))}
-      </ul>
+        <a className="text-[#ffffff] font-bold" href="/">Close</a>
+       
+        <motion.button
+          className="header-button bg-[#ffff] text-[#015daa] font-bold"
+          whileHover={{ scale: 1.1 }}
+          whileTap={{ scale: 0.9 }}
+        >
+          Talk
+        </motion.button>
+      </motion.div>
+      <div className='question-container'>
+        <div className='question'>
+        <img src={logo} alt="" className='logo'/>
+        <div><h2 className="text-2xl text-center text-white font-bold my-4">{topic.content}</h2></div>
+</div>
+      <div className='question-comment-section sticky-question-comment'>
+      
 
       {/* Add new comment form */}
-      <form onSubmit={handleCommentSubmit} className="flex items-center mt-4">
+      <form onSubmit={handleCommentSubmit} className="flex items-center mt-4   w-full mb-10">
         <textarea
           value={newComment}
           onChange={(e) => setNewComment(e.target.value)}
           placeholder="Add a comment..."
-          className="w-full p-2 border rounded-lg focus:outline-none focus:ring focus:ring-blue-300"
+          className="question-comment-input"
           required
         />
         <button type="submit" className="ml-2 text-xl p-2 bg-blue-500 text-white rounded-lg">
           <FiSend />
         </button>
       </form>
+      <div className='question-comment-container'>
+        {topic.comments.map((comment) => (
+          <li key={comment._id} className="question-comments">
+            {comment.text}
+          </li>
+        ))}
+      </div>
+      <button 
+        onClick={handleShare} 
+        className=" share-button  flex justify-center items-center  bg-white text-[#105daa] font-bold py-2 px-4 rounded mt-4"
+      >
+        <FiShare2 className="mr-2" />
+        Share
+      </button>
+      </div>
+      </div>
+      
     </div>
   );
 };

@@ -53,7 +53,7 @@ const LinkUp = (props) => {
 
   const handleSearch = async () => {
     try {
-      const response = await axios.post('http://localhost:5000/api/users/search', { 
+      const response = await axios.post('https://aau-stories-sever.vercel.app/api/users/search', { 
         gender: gender.toLowerCase(), 
         location: location.toLowerCase() 
       });

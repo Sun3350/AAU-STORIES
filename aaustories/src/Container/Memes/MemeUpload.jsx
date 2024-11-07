@@ -15,7 +15,7 @@ const MemeUpload = () => {
         formData.append('file', file);
         formData.append('caption', caption);
 
-        await axios.post('http://localhost:5000/api/memes', formData, {
+        await axios.post('https://aau-stories-sever.vercel.app/api/memes', formData, {
             headers: { 'Content-Type': 'multipart/form-data' },
         });
 

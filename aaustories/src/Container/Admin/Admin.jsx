@@ -48,7 +48,7 @@ const Admin = ({ children }) => {  // Add children to function parameters
 
   const handleLogout = () => {
     dispatch(logout());
-    navigate('/');
+    navigate('/blog');
   };
 
   return (
@@ -91,9 +91,9 @@ const Admin = ({ children }) => {  // Add children to function parameters
             initial="hidden"
             animate="visible"
             >
-              <Link to={handleLogout} className='font-bold text-1xl'> 
+              <div onClick={handleLogout} className='font-bold text-1xl'> 
                 <CiLogout className='font-bold text-2xl'/>{isExpanded && <motion.span>Logout</motion.span>}
-              </Link>
+              </div>
             </motion.li>
         </div>
 

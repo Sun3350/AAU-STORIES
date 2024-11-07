@@ -56,14 +56,14 @@ const CreateBlog = () => {
     try {
       if (blogData) {
         // Update existing blog
-        await axios.put(`http://localhost:5000/api/users/update-blog/${blogData.id}`, blog, {
+        await axios.put(`https://aau-stories-sever.vercel.app/api/users/update-blog/${blogData.id}`, blog, {
           headers: {
             'Content-Type': 'multipart/form-data',
           },
         });
       } else {
         // Create new blog
-        await axios.post('http://localhost:5000/api/users/create-blog', blog, {
+        await axios.post('https://aau-stories-sever.vercel.app/api/users/create-blog', blog, {
           headers: {
             'Content-Type': 'multipart/form-data',
           },

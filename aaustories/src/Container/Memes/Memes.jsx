@@ -18,7 +18,7 @@ const MemeList = () => {
     useEffect(() => {
         const fetchMemes = async () => {
             try {
-                const response = await axios.get('http://localhost:5000/api/users/meme');
+                const response = await axios.get('https://aau-stories-sever.vercel.app/api/users/meme');
                 setMemes(response.data);
             } catch (error) {
                 console.error('Failed to fetch memes:', error);

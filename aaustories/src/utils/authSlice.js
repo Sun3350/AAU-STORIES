@@ -7,7 +7,7 @@ export const loginUser = createAsyncThunk(
   'auth/loginUser',
   async ({ username, password }, { rejectWithValue }) => {
     try {
-      const response = await axios.post('http://localhost:5000/api/users/admin-login', { username, password });
+      const response = await axios.post('https://aau-stories-sever.vercel.app/api/users/admin-login', { username, password });
       localStorage.setItem('adminToken', response.data.token); // Store token in localStorage
       return response.data.token;
     } catch (error) {

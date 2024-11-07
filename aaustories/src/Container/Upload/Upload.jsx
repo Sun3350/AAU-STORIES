@@ -70,7 +70,7 @@ const CreateUser = () => {
 
     try {
       const response = await axios.post(
-        'http://localhost:5000/api/users/users', 
+        'https://aau-stories-sever.vercel.app/api/users/users', 
         formDataToSend,
         {
           headers: {

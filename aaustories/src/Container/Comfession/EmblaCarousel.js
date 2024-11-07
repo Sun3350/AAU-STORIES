@@ -5,7 +5,7 @@ import ClassNames from 'embla-carousel-class-names';
 import {
   NextButton,
   PrevButton,
-  usePrevNextButtons
+  usePrevNextButtons,
 } from './EmblaCarouselArrowButtons';
 import { DotButton, useDotButton } from './EmblaCarouselDotButton';
 import axios from 'axios';
@@ -13,29 +13,50 @@ import './comfession.css';
 
 const EmblaCarousel = (props) => {
   const { options } = props;
-  const [emblaRef, emblaApi] = useEmblaCarousel(options, [ClassNames()]);
+  const [emblaRef, emblaApi] = useEmblaCarousel(options); // Normal initialization
   const [confessions, setConfessions] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const navigate = useNavigate();
 
-  const MAX_TEXT_LENGTH = 550;
+  const [maxTextLength, setMaxTextLength] = useState(550);
+
+  useEffect(() => {
+    const updateTextLength = () => {
+      if (window.innerWidth <= 768) {
+        setMaxTextLength(400); // Set a smaller max length for mobile screens
+      } else if(window.innerWidth <= 550) {
+        setMaxTextLength(300); // Default max length for larger screens
+      }else{
+        setMaxTextLength(300);
+    }
+    };
+
+    updateTextLength(); // Check once on component mount
+    window.addEventListener('resize', updateTextLength); // Update on resize
+
+    return () => window.removeEventListener('resize', updateTextLength);
+  }, []);
+
 
   const { selectedIndex, scrollSnaps, onDotButtonClick } = useDotButton(emblaApi);
   const {
     prevBtnDisabled,
     nextBtnDisabled,
     onPrevButtonClick,
-    onNextButtonClick
+    onNextButtonClick,
   } = usePrevNextButtons(emblaApi);
 
-  // Fetch read confession IDs from localStorage
+  // Initialize ClassNames after emblaApi is set
+  useEffect(() => {
+    if (emblaApi) emblaApi.plugins([ClassNames()]); 
+  }, [emblaApi]);
+
   const getReadConfessions = () => {
     const readConfessions = localStorage.getItem('readConfessions');
     return readConfessions ? JSON.parse(readConfessions) : [];
   };
 
-  // Save read confession ID in localStorage
   const markAsRead = (confessionId) => {
     const readConfessions = getReadConfessions();
     const updatedReadConfessions = [...readConfessions, confessionId];
@@ -45,10 +66,11 @@ const EmblaCarousel = (props) => {
   const fetchConfessions = async () => {
     setLoading(true);
     try {
-      const readConfessions = getReadConfessions(); // Get list of read confessions
-      const response = await axios.post('http://localhost:5000/api/users/get-random-confessions', {
-        exclude: readConfessions // Send read confessions to backend to exclude
-      });
+      const readConfessions = getReadConfessions();
+      const response = await axios.post(
+        'https://aau-stories-sever.vercel.app/api/users/get-random-confessions',
+        { exclude: readConfessions }
+      );
       setConfessions(response.data);
     } catch (error) {
       console.error('Error fetching confessions:', error);
@@ -69,14 +91,14 @@ const EmblaCarousel = (props) => {
       )
     );
   };
+
   useEffect(() => {
     if (emblaApi) emblaApi.reInit();
   }, [confessions, emblaApi]);
-  
 
   const handleReadMore = (id) => {
-    markAsRead(id); // Mark confession as read
-    navigate(`/confession/${id}`); // Redirect to full confession page
+    markAsRead(id);
+    navigate(`/confession/${id}`);
   };
 
   if (loading) return <div className="embla_">Loading confessions...</div>;
@@ -87,14 +109,17 @@ const EmblaCarousel = (props) => {
       <div className="embla___viewport" ref={emblaRef}>
         <div className="embla___container">
           {confessions.map((confession) => (
-            <div key={confession._id} className='embla___slide embla___class-names'>
-              <p>
-                {confession.text.length > MAX_TEXT_LENGTH
-                  ? `${confession.text.substring(0, MAX_TEXT_LENGTH)}...`
-                  : confession.text}
-              </p>
-              {confession.text.length > MAX_TEXT_LENGTH && (
-                <button onClick={() => handleReadMore(confession._id)} className="read-more-button">
+            <div key={confession._id} className="embla___slide embla___class-names">
+              <p className='text-white comfession-text'>
+      {confession.text.length > maxTextLength
+        ? `${confession.text.substring(0, maxTextLength)}...`
+        : confession.text}
+    </p>
+              {confession.text.length > maxTextLength && (
+                <button
+                  onClick={() => handleReadMore(confession._id)}
+                  className="read-more-button"
+                >
                   Read More
                 </button>
               )}

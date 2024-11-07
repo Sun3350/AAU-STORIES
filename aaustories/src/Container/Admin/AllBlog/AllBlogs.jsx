@@ -14,7 +14,7 @@ const AllBlogs = () => {
   useEffect(() => {
     const fetchBlogs = async () => {
       try {
-        const response = await axios.get('http://localhost:5000/api/users/get-all-blog'); // Replace with your endpoint
+        const response = await axios.get('https://aau-stories-sever.vercel.app/api/users/get-all-blog'); // Replace with your endpoint
         setBlogs(response.data);
         setFilteredBlogs(response.data);
       } catch (error) {
@@ -39,7 +39,7 @@ const AllBlogs = () => {
 
   const handleDelete = async (id) => {
     try {
-      await axios.delete(`http://localhost:5000/api/users/delete-blog/${id}`);
+      await axios.delete(`https://aau-stories-sever.vercel.app/api/users/delete-blog/${id}`);
       setBlogs(blogs.filter(blog => blog.id !== id));
       setFilteredBlogs(filteredBlogs.filter(blog => blog.id !== id));
     } catch (error) {

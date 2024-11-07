@@ -21,7 +21,7 @@ const MemeItem = ({ meme }) => {
 
     const handleLike = async () => {
         try {
-            await axios.post(`http://localhost:5000/api/users/meme/${meme._id}/like`);
+            await axios.post(`https://aau-stories-sever.vercel.app/api/users/meme/${meme._id}/like`);
             setLikeCount((prevCount) => prevCount + 1);
         } catch (error) {
             console.error('Failed to like the meme:', error);

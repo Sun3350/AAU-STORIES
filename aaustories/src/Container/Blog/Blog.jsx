@@ -1,6 +1,6 @@
 import React,{useEffect, useState} from 'react'
 import './blog.css'
-import blog from '../../Images/blog.jpg'
+import logo from '../../Images/Logo.png'
 import axios from 'axios'
 const Blog = () => {
   const [latestBlog, setLatestBlog] = useState(null);
@@ -8,7 +8,7 @@ const Blog = () => {
   useEffect(() => {
       const fetchLatestBlog = async () => {
           try {
-              const response = await axios.get('http://localhost:5000/api/users/get-latest-blog');
+              const response = await axios.get('https://aau-stories-sever.vercel.app/api/users/get-latest-blog');
               setLatestBlog(response.data);
           } catch (error) {
               console.error('Error fetching the latest blog:', error);
@@ -27,14 +27,21 @@ const Blog = () => {
 
   return (
     <div className='blog-main-container'>
- <div className='header w-full flex justify-between items-center bg-[#105daa]  '>
-    <a className='text-[#ffffff] font-bold' href="/">Close</a> 
+ <div className='header w-full flex justify-between items-center bg-[#105daa] h-20  py-2'>
+   <div className='h-full w-16'>  <img className='w-full h-full' src={logo} alt="" />
+</div>
+  <div className='flex text-white'>
+  <li>Tech</li>
+  <li>Education</li>
+  <li>Fintech</li>
+  </div>
   
-      <button 
-        className='header-button bg-[#fff] text-[#105daa] font-bold' 
+
+      <div 
+        className=' text-[#fff] font-bold' 
       >
-        Change Location
-      </button>
+        search
+      </div>
   </div>    
   <div className='main-blog-container'>
             <img src={latestBlog.blogImage} alt={latestBlog.title} className='main-blog-image' />

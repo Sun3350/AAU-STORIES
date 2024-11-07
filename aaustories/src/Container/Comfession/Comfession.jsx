@@ -22,7 +22,7 @@ const Comfession = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      await axios.post('http://localhost:5000/api/users/submit-comfession', { text });
+      await axios.post('https://aau-stories-sever.vercel.app/api/users/submit-comfession', { text });
       setText(''); // Clear text field after submission
     } catch (error) {
       console.error('Error submitting confession:', error);

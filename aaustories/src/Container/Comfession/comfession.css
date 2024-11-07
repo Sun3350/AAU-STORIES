@@ -7,6 +7,7 @@
     flex-direction: column;
     background-color: #015daa;
     color: #fff;
+    height: 100vh;
 }
 .comfession-popup{
     width: 60%;
@@ -35,7 +36,8 @@
   .embla___container {
     display: flex;
     touch-action: pan-y pinch-zoom;
-    margin-left:10vh;
+      justify-content: center;
+      align-items: center;
    
   }
   .embla___slide {
@@ -54,7 +56,7 @@
     grid-template-columns: auto 1fr;
     justify-content: space-between;
     gap: 1.2rem;
-    margin-top: 1.8rem;
+  
   }
   .embla___buttons {
     display: grid;
@@ -136,25 +138,16 @@
   .embla___slide {
     transition: opacity 0.2s ease-in-out;
   }
-  .embla___slide:not(.is-snapped) {
-    opacity: 0.16;
-  }
-  
+ 
   .read-more-button {
-    /* Bootstrap primary color */
     color: white;
-    border: none;
-    padding: 0.5rem 1rem;
     margin-top: 1rem; /* Add space above the button */
     cursor: pointer;
-    border-radius: 0.25rem; /* Optional: for rounded corners */
-    transition: background-color 0.3s; /* Smooth transition for hover effect */
+    transition: background-color 0.3s;
+    font-weight: 600; /* Smooth transition for hover effect */
   }
   
-  .read-more-button:hover {
-    background-color: white; 
-    color: #015daa;/* Darker shade on hover */
-  }
+  
   
   .single-main-confession-container{
     background-color: #105daa;
@@ -168,7 +161,9 @@
     display: flex;
     flex-direction: column;
     align-items:  center;
+    justify-content: center;
     width: 70%;
+    height: 100%;
     margin-bottom: 10vh;
   }
   .confession-container{
@@ -187,11 +182,12 @@
     border-top: none;
     border-right: none;
     border-left: none;
-   
     color: white;
     border-radius: 0px;
   }
-
+  .comment-section-container{
+    width: 100%;
+  }
   .comment-input::placeholder{
     color: #ffffff;
   }
@@ -212,4 +208,70 @@
     width: 100%;
     overflow-y: auto;
     height: 50vh;
+  }
+
+  @media only screen and (max-width: 768px){
+    .comfession{
+      width: 100%;
+    }
+    .embla_{
+      width: 100%;
+      display: flex;
+      margin: 0;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+    }
+    .embla___controls{
+      width: 100%;
+    }
+    .comfession-text {
+      font-size: 12px;
+    }
+    .single-confession-container{
+      width: 100%;
+      padding: 0px 10px 0px 10px;
+    }
+    
+  }
+  @media only screen and (max-width: 550px){
+    .single-main-confession-container{
+      height: 100vh;
+    }
+    .embla___controls{
+         display: none;
+    }
+    .embla___controls{
+      width: 100%;
+    }
+    .read-more-button{
+      font-size: 10px;
+    }
+    .single-confession-container{
+      width: 100%;
+      padding: 0px 10px 0px 10px;
+    }
+    .single-comfession-text{
+      overflow-y: hidden;
+      height: 50vh;
+    }
+    .comment-section-container{
+      display: none;
+    }
+    .comment-input{
+      background: none;
+    border: 1px solid #015daa;
+    border-top: none;
+    border-right: none;
+    border-left: none;
+    color: #015daa;
+    border-radius: 0px;
+    height: 40px;
+    }
+    .comment-input::placeholder{
+      color: #015daa;
+    }
+    .comments{
+      color: #015daa;
+    }
   }

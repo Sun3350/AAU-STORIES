@@ -11,7 +11,7 @@ const PostQuestion = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.post('http://localhost:5000/api/users/topics', { content });
+      const response = await axios.post('https://aau-stories-sever.vercel.app/api/users/topics', { content });
      setContent(response.data);
      
       setContent('');

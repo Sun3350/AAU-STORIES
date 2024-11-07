@@ -71,11 +71,13 @@ const Home = () => {
   const [questionComment, setQuestionComment] = useState('');
   const [topics, setTopics] = useState([]);
   const navigate = useNavigate(); // React Router hook to navigate programmatically
+  const [loading, setLoading] = useState(true); // Loading state
 
   const fetchTopics = async () => {
     try {
-      const response = await axios.get('http://localhost:5000/api/users/get-topics');
+      const response = await axios.get('https://aau-stories-sever.vercel.app/api/users/get-topics');
       setTopics(response.data);
+      setLoading(false)
     } catch (error) {
       console.error('Error fetching topics:', error);
     }
@@ -84,7 +86,7 @@ const Home = () => {
   const handleCommentSubmit = async (e, topicId) => {
     e.preventDefault();
     try {
-      await axios.post(`http://localhost:5000/api/users/topics/${topicId}/comment`, { text:questionComment });
+      await axios.post(`https://aau-stories-sever.vercel.app/api/users/topics/${topicId}/comment`, { text:questionComment });
       setQuestionComment('');
       fetchTopics(); // Fetch updated topics after submitting a comment
     } catch (error) {
@@ -135,7 +137,7 @@ const Home = () => {
         </ul>
       </motion.div>
     </div>
-      <div className='w-full flex justify-center items-center home-container shadow-2xl'>
+      <div className='w-full flex justify-center items-center home-container '>
         <div className='first-home-container p-6'>
           {/* Logo animation */}
           <motion.img
@@ -159,39 +161,43 @@ const Home = () => {
           </motion.h3>
 
           {/* Topic content with staggered animation */}
-          <div>
-            {topics.map(({ _id, content }, index) => (
-              <motion.div
-                key={_id}
-                className='flex flex-col items-center w-full'
-                variants={textVariants}
-                initial='hidden'
-                animate='visible'
-                custom={index + 1} // Start delay for each topic (1, 2, 3...)
-              >
-                <p className='mt-5 mb-4 text-2xl font-bold text-center'>{content}</p>
-                <form onSubmit={(e) => handleCommentSubmit(e, _id)} className='flex w-full justify-center items-center'>
-                  <textarea
-                    type="text"
-                    value={questionComment}
-                    onChange={(e) => setQuestionComment(e.target.value)}
-                    placeholder="Add a comment..."
-                    required
-                    className="w-full mt-2 p-3 border border-gray-300 rounded-lg focus:ring focus:ring-blue-200 outline-none"
-                  />
-                  <button className='question-button text-3xl' type="submit">
-                    <FiSend /> 
-                  </button>
-                </form>
-                <button
-                  className='bg-green-500  text-white px-4 py-2 mt-3 rounded-md'
-                  onClick={() => handleViewComments(_id)} // Pass the topicId to view full question
-                >
-                  View Comments
-                </button>
-              </motion.div>
-            ))}
-          </div>
+          <div className='flex justify-center items-center  h-52 w-fit'>
+      {loading ? (
+        <p className="text-center text-xl font-bold">Loading...</p>
+      ) : (
+        topics.map(({ _id, content }, index) => (
+          <motion.div
+            key={_id}
+            className="flex flex-col items-center w-full"
+            variants={{ /* your animation variants here */ }}
+            initial="hidden"
+            animate="visible"
+            custom={index + 1}
+          >
+            <p className="mt-5 mb-4 text-2xl font-bold text-center">{content}</p>
+            <form onSubmit={(e) => handleCommentSubmit(e, _id)} className="flex w-full justify-center items-center">
+              <textarea
+                type="text"
+                value={questionComment}
+                onChange={(e) => setQuestionComment(e.target.value)}
+                placeholder="Add a comment..."
+                required
+                className="question-comment-input"
+              />
+              <button className="question-button text-3xl" type="submit">
+                <FiSend className='send'/>
+              </button>
+            </form>
+            <button
+              className="bg-green-500 text-white px-4 py-2 mt-3 rounded-md"
+              onClick={() => handleViewComments(_id)}
+            >
+              View Comments
+            </button>
+          </motion.div>
+        ))
+      )}
+    </div>
         </div>
 
         <div className='second-home-container'>
