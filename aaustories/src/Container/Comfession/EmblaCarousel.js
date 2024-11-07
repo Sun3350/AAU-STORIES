@@ -28,7 +28,7 @@ const EmblaCarousel = (props) => {
       } else if(window.innerWidth <= 550) {
         setMaxTextLength(300); // Default max length for larger screens
       }else{
-        setMaxTextLength(300);
+        setMaxTextLength(550);
     }
     };
 
