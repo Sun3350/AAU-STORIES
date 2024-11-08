@@ -79,7 +79,7 @@ const [showComment, setShowComment] = useState(false)
   if (error) return <div>{error}</div>;
 
   return (
-    <div className='single-main-confession-container ' onClick={() => setShowComment(false)}>
+    <div className='single-main-confession-container ' >
       <motion.div
         className="header w-full flex justify-between items-center"
         initial={{ y: -100, opacity: 0 }}
@@ -174,51 +174,64 @@ const [showComment, setShowComment] = useState(false)
           </div>
 
           {showComment && (
-          <motion.div
-            className='show-comment fixed bottom-0 left-0 w-full h-[60%] bg-white p-4 rounded-t-lg shadow-lg'
-            initial={{ y: "100%" }}
-            animate={{ y: 0 }}
-            exit={{ y: "100%" }}
-            transition={{ type: 'spring', stiffness: 300, damping: 30 }}
-            onPanEnd={(e, point) => {
-              if (point.offset.y > 100) {
-                setShowComment(false); // Close if swipe down
-              }
-            }}
-          >
-            <motion.div
-              className='h-[50vh]  overflow-y-auto'
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ duration: 1 }}
-            >
-              
-              {commentLoading && <p>Adding comment...</p>}
-              {commentError && <p>{commentError}</p>}
-              {confession.comments && confession.comments.length > 0 ? (
-                confession.comments.map((comment) => (
-                  <div className='comments' key={comment._id}>
-                    <p>{comment.tex}</p>
-                  </div>
-                ))
-              ) : (
-                <p className='comments' >No comments yet.</p>
-              )}
-               
-            </motion.div>
-            <form onSubmit={handleCommentSubmit} className='flex w-full mb-4'>
-                <textarea
-                  value={tex}
-                  onChange={(e) => setTex(e.target.value)}
-                  placeholder="Add a comment..."
-                  required
-                  rows={3}
-                  className='comment-input w-full p-2 border rounded-md'
-                />
-                <button type="submit" disabled={commentLoading} className='text-[#015daa]'>Comment</button>
-              </form>
-          </motion.div>
+  <motion.div
+    className="fixed bottom-0 left-0 w-full h-full flex items-end"
+    initial={{ y: "100%" }}
+    animate={{ y: 0 }}
+    exit={{ y: "100%" }}
+    transition={{ type: 'spring', stiffness: 300, damping: 30 }}
+    onPanEnd={(e, point) => {
+      if (point.offset.y > 100) {
+        setShowComment(false); // Close if swiped down
+      }
+    }}
+    onClick={() => setShowComment(false)}
+  >
+    <motion.div
+      className="flex flex-col justify-between w-full h-4/5 bg-white p-4 rounded-t-lg shadow-lg"
+    >
+      {/* Comments section */}
+      <motion.div
+        className="overflow-y-auto"
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ duration: 1 }}
+      >
+        {commentLoading && <p>Adding comment...</p>}
+        {commentError && <p>{commentError}</p>}
+        {confession.comments && confession.comments.length > 0 ? (
+          confession.comments.map((comment) => (
+            <div className="comments" key={comment._id}>
+              <p>{comment.tex}</p>
+            </div>
+          ))
+        ) : (
+          <p className="comments">No comments yet.</p>
         )}
+      </motion.div>
+
+      {/* Comment form */}
+      <form onSubmit={handleCommentSubmit} className="flex w-full mb-4">
+        <textarea
+          value={tex}
+          onChange={(e) => setTex(e.target.value)}
+          placeholder="Add a comment..."
+          required
+          rows={3}
+          className="comment-input w-full p-2 border rounded-md"
+        />
+        <button
+          type="submit"
+          disabled={commentLoading}
+          className="text-[#015daa] ml-2"
+        >
+          Comment
+        </button>
+      </form>
+    </motion.div>
+  </motion.div>
+)}
+
     </div>
   );
 };

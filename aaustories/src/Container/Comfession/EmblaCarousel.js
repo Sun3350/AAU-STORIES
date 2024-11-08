@@ -50,24 +50,14 @@ const EmblaCarousel = (props) => {
   // Initialize ClassNames after emblaApi is set
   
 
-  const getReadConfessions = () => {
-    const readConfessions = localStorage.getItem('readConfessions');
-    return readConfessions ? JSON.parse(readConfessions) : [];
-  };
-
-  const markAsRead = (confessionId) => {
-    const readConfessions = getReadConfessions();
-    const updatedReadConfessions = [...readConfessions, confessionId];
-    localStorage.setItem('readConfessions', JSON.stringify(updatedReadConfessions));
-  };
+ 
 
   const fetchConfessions = async () => {
     setLoading(true);
     try {
-      const readConfessions = getReadConfessions();
       const response = await axios.post(
         'https://aau-stories-sever.vercel.app/api/users/get-random-confessions',
-        { exclude: readConfessions }
+      
       );
       setConfessions(response.data);
     } catch (error) {
@@ -82,20 +72,14 @@ const EmblaCarousel = (props) => {
     fetchConfessions();
   }, []);
 
-  const handleCommentAdded = (updatedConfession) => {
-    setConfessions((prev) =>
-      prev.map((confession) =>
-        confession._id === updatedConfession._id ? updatedConfession : confession
-      )
-    );
-  };
+  
 
   useEffect(() => {
     if (emblaApi) emblaApi.reInit();
   }, [confessions, emblaApi]);
 
   const handleReadMore = (id) => {
-    markAsRead(id);
+   
     navigate(`/confession/${id}`);
   };
 

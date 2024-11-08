@@ -254,12 +254,17 @@
     border-left: none;
     color: #015daa;
     border-radius: 0px;
-    height: 40px;
+    height:50px;
     }
     .comment-input::placeholder{
       color: #015daa;
     }
     .comments{
       color: #015daa;
+    }
+    .show-comment{
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
     }
   }
