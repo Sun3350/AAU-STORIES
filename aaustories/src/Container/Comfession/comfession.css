@@ -59,13 +59,7 @@
     flex-direction: column;
     padding: 10px;
   }
-  .embla__controls {
-    display: grid;
-    grid-template-columns: auto 1fr;
-    justify-content: space-between;
-    gap: 1.2rem;
-    margin-top: 1.8rem;
-  }
+ 
  
   .embla___controls {
     display: grid;
