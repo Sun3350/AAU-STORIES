@@ -154,7 +154,7 @@ const [showComment, setShowComment] = useState(false)
         </div>
       </div>
 
-     <div className='fixed bottom-20 right-10 flex'>
+     <div className='fixed bottom-10 right-5 flex'>
        <motion.button
             className=" bg-white text-[#105daa] font-bold py-2 px-4 rounded mx-2 "
             onClick={handleShare}

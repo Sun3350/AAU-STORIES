@@ -48,9 +48,7 @@ const EmblaCarousel = (props) => {
   } = usePrevNextButtons(emblaApi);
 
   // Initialize ClassNames after emblaApi is set
-  useEffect(() => {
-    if (emblaApi) emblaApi.plugins([ClassNames()]); 
-  }, [emblaApi]);
+  
 
   const getReadConfessions = () => {
     const readConfessions = localStorage.getItem('readConfessions');
@@ -108,23 +106,26 @@ const EmblaCarousel = (props) => {
     <div className="embla_">
       <div className="embla___viewport" ref={emblaRef}>
         <div className="embla___container">
-          {confessions.map((confession) => (
-            <div key={confession._id} className="embla___slide embla___class-names">
-              <p className='text-white comfession-text'>
-      {confession.text.length > maxTextLength
-        ? `${confession.text.substring(0, maxTextLength)}...`
-        : confession.text}
-    </p>
-              {confession.text.length > maxTextLength && (
-                <button
-                  onClick={() => handleReadMore(confession._id)}
-                  className="read-more-button"
-                >
-                  Read More
-                </button>
-              )}
-            </div>
-          ))}
+          
+        {confessions.map((confession) => (
+  <div key={confession._id} className="embla___slide ">
+    <div className='embla___slide___number'>
+    <p className='text-white comfession-text'>
+{confession.text.length > maxTextLength
+? `${confession.text.substring(0, maxTextLength)}...`
+: confession.text}
+</p>
+    {confession.text.length > maxTextLength && (
+      <div
+        onClick={() => handleReadMore(confession._id)}
+        className="read-more-buttons"
+      >
+        Read More
+      </div>
+    )}
+  </div>
+  </div>
+))}
         </div>
       </div>
 

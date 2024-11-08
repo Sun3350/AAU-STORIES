@@ -13,16 +13,21 @@
 .link-up, .comfess, .memes, .donation, .admin{
     margin: 2vh;
 }
-.first-home-container, .second-home-container{
+ .second-home-container{
     width: 50%;
     height: 100%;
     display:flex ;
-    flex-direction: column;
     justify-content: center;
     align-items: center;
     
 }
 .first-home-container{
+  width: 50%;
+  height: 100%;
+  display:flex ;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
     background-color: #105daa;
     border-radius: 10px 0px 0px 10px;
 }
