@@ -53,7 +53,9 @@ const MemeList = () => {
 
     return (
         <div className="meme-main-container">
-            <div className="meme-container">
+
+            Meme Page is not ready yet
+           {/** <div className="meme-container">
                 <div className="emblameme">
                     <div className="emblaviewport" ref={emblaRef}>
                         <div className="emblacontainer">
@@ -74,7 +76,7 @@ const MemeList = () => {
                         </div>
                     </div>
                 </div>
-            </div>
+            </div>*/}
         </div>
     );
 };

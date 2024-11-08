@@ -48,7 +48,7 @@
     flex: 0 0 var(--slide-size);
     min-width: 0;
     border: 1px solid white;
-   margin:2vh;
+   margin: 2vh;
    border-radius: 5px;
   }
   .embla___slide___number {
