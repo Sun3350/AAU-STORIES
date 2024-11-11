@@ -2,16 +2,18 @@ import { useEffect, useState } from 'react';
 import io from 'socket.io-client';
 import './admin.css';
 
-const socket = io('https://aau-stories-sever.vercel.app'); // Replace with your server URL
-
+// Connect to the backend via Socket.io
+const socket = io('https://aau-stories-sever.vercel.app', {
+    transports: ['websocket'], // Force WebSocket if other transports fail
+  });
 const ChatComponent = () => {
   const [messages, setMessages] = useState([]);
   const [unreadCount, setUnreadCount] = useState(0);
   const [chatName, setChatName] = useState(null);
   const [newMessage, setNewMessage] = useState('');
-  const [showModal, setShowModal] = useState(true); // State to control the modal visibility
+  const [showModal, setShowModal] = useState(true); // Controls modal visibility
 
-  // Fetch chat history and join room
+  // Fetch chat history and join room on mount
   useEffect(() => {
     // Check for an existing chat name in local storage
     const storedChatName = localStorage.getItem('chatName');
@@ -23,10 +25,10 @@ const ChatComponent = () => {
     // Join the 'adminRoom' on connection
     socket.emit('joinRoom', 'adminRoom');
 
-    // Fetch chat history from the backend when the component mounts
+    // Fetch chat history from the backend
     const fetchChatHistory = async () => {
       try {
-        const response = await fetch('https://aau-stories-sever.vercel.app/api/users/chat-history'); // Make sure to replace with the correct API URL
+        const response = await fetch('https://aau-stories-sever.vercel.app/api/users/chat-history');
         const data = await response.json();
         setMessages(data); // Set the messages from the backend
       } catch (error) {
@@ -126,8 +128,10 @@ const ChatComponent = () => {
   return (
     <div className="chat-container">
       <h2>Chat</h2>
-{   /**   <div className="unread-messages">Unread Messages: {unreadCount}</div>
-*/}      <div className="message-list">
+      {/* Uncomment this to display unread message count */}
+      {/* <div className="unread-messages">Unread Messages: {unreadCount}</div> */}
+
+      <div className="message-list">
         {messages.map((msg, index) => (
           <div
             key={index}
@@ -137,6 +141,7 @@ const ChatComponent = () => {
           </div>
         ))}
       </div>
+
       <div className="message-input">
         <input
           type="text"
@@ -148,7 +153,6 @@ const ChatComponent = () => {
       </div>
     </div>
   );
-  
 };
 
 export default ChatComponent;
