@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import io from 'socket.io-client';
 import './admin.css';
 
-const socket = io('http://localhost:5000'); // Replace with your server URL
+const socket = io('https://aau-stories-sever.vercel.app'); // Replace with your server URL
 
 const ChatComponent = () => {
   const [messages, setMessages] = useState([]);
