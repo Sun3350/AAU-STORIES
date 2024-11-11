@@ -19,6 +19,8 @@ import CreateBlog from './Container/Blog/CreateBlog';
 import AllBlogs from './Container/Admin/AllBlog/AllBlogs';
 import ProtectedRoute from './utils/ProtectedRoute';
 import AdminLogin from './Container/Admin/AdminLogin';
+import AdminHome from './Container/Admin/AdminHome';
+import ChatComponent from './Container/Admin/AdminChat';
 
 const App = () => {
  
@@ -47,9 +49,11 @@ const AdminLayout = () => (
   <ProtectedRoute>
   <Admin>
     <Routes>
+      <Route path="/" element={<AdminHome />} />
       <Route path="create-blog" element={<CreateBlog />} />
       <Route path="question" element={<PostQuestion />} />
       <Route path="all-blog-posted" element={<AllBlogs />} />
+      <Route path="chat" element={<ChatComponent />} />
     </Routes>
   </Admin>
   </ProtectedRoute>

@@ -39,7 +39,6 @@ const EmblaCarousel = (props) => {
   }, []);
 
 
-  const { selectedIndex, scrollSnaps, onDotButtonClick } = useDotButton(emblaApi);
   const {
     prevBtnDisabled,
     nextBtnDisabled,
