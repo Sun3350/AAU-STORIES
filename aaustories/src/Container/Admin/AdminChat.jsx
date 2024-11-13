@@ -1,19 +1,17 @@
-import { useEffect, useState } from 'react';
+import { useState, useEffect } from 'react';
+import axios from 'axios';
 import io from 'socket.io-client';
 import './admin.css';
 
-// Connect to the backend via Socket.io
-const socket = io('https://aau-stories-sever.vercel.app', {
-    transports: ['websocket'], // Force WebSocket if other transports fail
-  });
-const ChatComponent = () => {
-  const [messages, setMessages] = useState([]);
-  const [unreadCount, setUnreadCount] = useState(0);
-  const [chatName, setChatName] = useState(null);
-  const [newMessage, setNewMessage] = useState('');
-  const [showModal, setShowModal] = useState(true); // Controls modal visibility
+const socket = io('http://localhost:5000'); // Initialize the socket once outside the component
 
-  // Fetch chat history and join room on mount
+function ChatComponent() {
+  const [chatName, setChatName] = useState('');
+  const [showModal, setShowModal] = useState(true);
+  const [messages, setMessages] = useState([]);
+  const [newMessage, setNewMessage] = useState('');
+  const [unreadCount, setUnreadCount] = useState(0);
+
   useEffect(() => {
     // Check for an existing chat name in local storage
     const storedChatName = localStorage.getItem('chatName');
@@ -22,52 +20,63 @@ const ChatComponent = () => {
       setShowModal(false); // Hide modal if chatName exists
     }
 
-    // Join the 'adminRoom' on connection
-    socket.emit('joinRoom', 'adminRoom');
+    // Join the 'adminRoom' only if the socket is connected
+    if (socket.connected) {
+      console.log("Socket is already connected:", socket.id);
+      socket.emit('joinRoom', 'adminRoom');
+    } else {
+      socket.on('connect', () => {
+        console.log("Connected with socket ID:", socket.id);
+        socket.emit('joinRoom', 'adminRoom');
+      });
+    }
 
     // Fetch chat history from the backend
     const fetchChatHistory = async () => {
       try {
-        const response = await fetch('https://aau-stories-sever.vercel.app/api/users/chat-history');
-        const data = await response.json();
-        setMessages(data); // Set the messages from the backend
+        const response = await axios.get('https://aau-stories-sever.vercel.app/api/users/chat-history');
+        const data = response.data;
+        setMessages(data);
       } catch (error) {
         console.error("Error fetching chat history:", error);
       }
     };
-
     fetchChatHistory();
 
     // Listen for new messages
-    socket.on('receiveMessage', (data) => {
+    const handleReceiveMessage = (data) => {
+      console.log("Received message:", data);
       setMessages((prevMessages) => [...prevMessages, data]);
-    });
+    };
 
     // Listen for new message notifications
-    socket.on('newMessageNotification', (data) => {
+    const handleNewMessageNotification = (data) => {
+      console.log("New message notification:", data);
       setUnreadCount(data.unreadCount);
-    });
+    };
 
-    // Clear unread messages count when marked as read
-    socket.on('unreadMessagesCleared', () => {
+    // Listen for clearing of unread messages
+    const handleUnreadMessagesCleared = () => {
+      console.log("Unread messages cleared");
       setUnreadCount(0);
-    });
+    };
 
-    // Ensure the socket is connected and the user joins the room correctly on reconnect
-    socket.on('connect', () => {
-      console.log("Reconnected with socket ID:", socket.id);
-      socket.emit('joinRoom', 'adminRoom');
-    });
+    // Register event listeners
+    socket.on('receiveMessage', handleReceiveMessage);
+    socket.on('newMessageNotification', handleNewMessageNotification);
+    socket.on('unreadMessagesCleared', handleUnreadMessagesCleared);
 
-    // Cleanup socket connection on component unmount
+    // Cleanup function to remove listeners on unmount
     return () => {
-      socket.off('connect');
-      socket.disconnect();
+      socket.off('receiveMessage', handleReceiveMessage);
+      socket.off('newMessageNotification', handleNewMessageNotification);
+      socket.off('unreadMessagesCleared', handleUnreadMessagesCleared);
     };
   }, []);
 
   // Handle saving the chat name
   const handleSaveChatName = (name) => {
+    console.log("Saving chat name:", name);
     localStorage.setItem('chatName', name);
     setChatName(name);
     setShowModal(false); // Hide modal after saving name
@@ -77,18 +86,17 @@ const ChatComponent = () => {
   const handleSendMessage = () => {
     if (newMessage.trim() !== '') {
       const messageData = {
-        sender: chatName, // Your chat name
+        sender: chatName,
         message: newMessage,
-        room: 'adminRoom', // Always use 'adminRoom' for this chat
+        room: 'adminRoom',
       };
 
       // Emit the message to the backend
+      console.log("Sending message:", messageData);
       socket.emit('sendMessage', messageData);
 
       // Add the message to the local state for local rendering
       setMessages((prevMessages) => [...prevMessages, messageData]);
-
-      // Clear the input field after sending the message
       setNewMessage('');
     }
   };
