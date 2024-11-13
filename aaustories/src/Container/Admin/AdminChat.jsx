@@ -3,7 +3,10 @@ import axios from 'axios';
 import io from 'socket.io-client';
 import './admin.css';
 
-const socket = io('https://aau-stories-sever.vercel.app'); // Initialize the socket once outside the component
+const socket = io('https://aau-stories-sever.vercel.app', {
+  transports: ['websocket', 'polling'], // This can help resolve some connection issues
+  withCredentials: true
+});
 
 function ChatComponent() {
   const [chatName, setChatName] = useState('');
