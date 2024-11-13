@@ -3,10 +3,8 @@ import axios from 'axios';
 import io from 'socket.io-client';
 import './admin.css';
 
-const socket = io('https://aau-stories-sever.vercel.app', {
-  transports: ['websocket', 'polling'], // This can help resolve some connection issues
-  withCredentials: true
-});
+let socket;
+
 
 function ChatComponent() {
   const [chatName, setChatName] = useState('');
@@ -16,6 +14,11 @@ function ChatComponent() {
   const [unreadCount, setUnreadCount] = useState(0);
 
   useEffect(() => {
+
+    socket = io('https://aau-stories-sever.vercel.app', {
+      transports: ['websocket', 'polling'],
+      withCredentials: true,
+    });
     // Check for an existing chat name in local storage
     const storedChatName = localStorage.getItem('chatName');
     if (storedChatName) {
