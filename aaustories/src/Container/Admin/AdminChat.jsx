@@ -1,84 +1,63 @@
 import { useState, useEffect } from 'react';
-import axios from 'axios';
-import io from 'socket.io-client';
+import { ref, onValue, push } from 'firebase/database';
+import { getAuth, signInAnonymously } from 'firebase/auth';
+import { database } from '../../utils/Firebase';
 import './admin.css';
-
-let socket;
-
 
 function ChatComponent() {
   const [chatName, setChatName] = useState('');
   const [showModal, setShowModal] = useState(true);
   const [messages, setMessages] = useState([]);
   const [newMessage, setNewMessage] = useState('');
-  const [unreadCount, setUnreadCount] = useState(0);
 
   useEffect(() => {
-
-    socket = io('https://aau-stories-sever.vercel.app', {
-      transports: ['websocket', 'polling'],
-      withCredentials: true,
-    });
-    // Check for an existing chat name in local storage
+    // Check if there's an existing chat name
     const storedChatName = localStorage.getItem('chatName');
     if (storedChatName) {
       setChatName(storedChatName);
-      setShowModal(false); // Hide modal if chatName exists
+      setShowModal(false); // If a chat name is stored, hide the modal
     }
 
-    // Join the 'adminRoom' only if the socket is connected
-    if (socket.connected) {
-      console.log("Socket is already connected:", socket.id);
-      socket.emit('joinRoom', 'adminRoom');
-    } else {
-      socket.on('connect', () => {
-        console.log("Connected with socket ID:", socket.id);
-        socket.emit('joinRoom', 'adminRoom');
+    // Sign in anonymously to Firebase
+    const auth = getAuth();
+    signInAnonymously(auth)
+      .then(() => {
+        console.log("Signed in anonymously");
+      })
+      .catch((error) => {
+        console.error("Error signing in anonymously:", error.message);
       });
-    }
 
-    // Fetch chat history from the backend
-    const fetchChatHistory = async () => {
-      try {
-        const response = await axios.get('https://aau-stories-sever.vercel.app/api/users/chat-history');
-        const data = response.data;
-        setMessages(data);
-      } catch (error) {
-        console.error("Error fetching chat history:", error);
+    // Reference to the messages node in the database
+    const messagesRef = ref(database, 'messages');
+
+    onValue(messagesRef, (snapshot) => {
+      const data = snapshot.val();
+      console.log("Fetched data from Firebase:", data); // Check if this logs your messages
+      
+      const loadedMessages = [];
+      for (let key in data) {
+        loadedMessages.push(data[key]);
       }
-    };
-    fetchChatHistory();
-
-    // Listen for new messages
-    const handleReceiveMessage = (data) => {
-      console.log("Received message:", data);
-      setMessages((prevMessages) => [...prevMessages, data]);
-    };
-
-    // Listen for new message notifications
-    const handleNewMessageNotification = (data) => {
-      console.log("New message notification:", data);
-      setUnreadCount(data.unreadCount);
-    };
-
-    // Listen for clearing of unread messages
-    const handleUnreadMessagesCleared = () => {
-      console.log("Unread messages cleared");
-      setUnreadCount(0);
-    };
-
-    // Register event listeners
-    socket.on('receiveMessage', handleReceiveMessage);
-    socket.on('newMessageNotification', handleNewMessageNotification);
-    socket.on('unreadMessagesCleared', handleUnreadMessagesCleared);
-
-    // Cleanup function to remove listeners on unmount
-    return () => {
-      socket.off('receiveMessage', handleReceiveMessage);
-      socket.off('newMessageNotification', handleNewMessageNotification);
-      socket.off('unreadMessagesCleared', handleUnreadMessagesCleared);
-    };
+      setMessages(loadedMessages);
+    });
   }, []);
+
+  const handleSendMessage = () => {
+    if (newMessage.trim() !== '') {
+      const messageData = {
+        sender: chatName,
+        message: newMessage,
+        timestamp: Date.now(),
+      };
+
+      // Push the new message to the Firebase database
+      const messagesRef = ref(database, 'messages');
+      push(messagesRef, messageData);
+
+      setNewMessage('');
+    }
+  };
 
   // Handle saving the chat name
   const handleSaveChatName = (name) => {
@@ -86,25 +65,6 @@ function ChatComponent() {
     localStorage.setItem('chatName', name);
     setChatName(name);
     setShowModal(false); // Hide modal after saving name
-  };
-
-  // Handle sending a new message
-  const handleSendMessage = () => {
-    if (newMessage.trim() !== '') {
-      const messageData = {
-        sender: chatName,
-        message: newMessage,
-        room: 'adminRoom',
-      };
-
-      // Emit the message to the backend
-      console.log("Sending message:", messageData);
-      socket.emit('sendMessage', messageData);
-
-      // Add the message to the local state for local rendering
-      setMessages((prevMessages) => [...prevMessages, messageData]);
-      setNewMessage('');
-    }
   };
 
   // Modal Component to handle chat name input
@@ -142,19 +102,58 @@ function ChatComponent() {
   return (
     <div className="chat-container">
       <h2>Chat</h2>
-      {/* Uncomment this to display unread message count */}
-      {/* <div className="unread-messages">Unread Messages: {unreadCount}</div> */}
 
       <div className="message-list">
-        {messages.map((msg, index) => (
-          <div
-            key={index}
-            className={`message ${msg.sender === chatName ? 'current-user' : 'other-user'}`}
-          >
-            <strong>{msg.sender === chatName ? 'You' : msg.sender}:</strong> {msg.message}
+  {messages.map((msg, index) => {
+    // Convert the timestamp to a date
+    const messageDate = new Date(msg.timestamp);
+    const now = new Date();
+
+    // Format time with AM/PM
+    const formattedTime = messageDate.toLocaleTimeString([], {
+      hour: '2-digit',
+      minute: '2-digit',
+      hour12: true, // This will add AM/PM
+    });
+
+    // Calculate the difference between the current date and the message date
+    let formattedDate;
+    const isToday = messageDate.toDateString() === now.toDateString();
+    const yesterday = new Date();
+    yesterday.setDate(now.getDate() - 1);
+    const isYesterday = messageDate.toDateString() === yesterday.toDateString();
+
+    if (isToday) {
+      formattedDate = 'Today';
+    } else if (isYesterday) {
+      formattedDate = 'Yesterday';
+    } else {
+      formattedDate = messageDate.toLocaleDateString();
+    }
+
+    // Check if this is the first message or if the date has changed compared to the previous message
+    const showDate =
+      index === 0 ||
+      new Date(messages[index - 1].timestamp).toDateString() !== messageDate.toDateString();
+
+    return (
+      <div key={index} className='flex flex-col '>
+        {/* Display the date as a separate divider if it's a new date */}
+        {showDate && <div className="date-divider shadow-sm">{formattedDate}</div>}
+
+        {/* Render the message below the date divider */}
+        <div
+          className={`message ${msg.sender === chatName ? 'current-user' : 'other-user'}`}
+        >
+          <strong>{msg.sender === chatName ? 'You' : msg.sender}:</strong> {msg.message}
+          <div className="  message-timestamp">
+            <span >{formattedTime}</span>
           </div>
-        ))}
+        </div>
       </div>
+    );
+  })}
+</div>
 
       <div className="message-input">
         <input
@@ -167,6 +166,6 @@ function ChatComponent() {
       </div>
     </div>
   );
-};
+}
 
 export default ChatComponent;

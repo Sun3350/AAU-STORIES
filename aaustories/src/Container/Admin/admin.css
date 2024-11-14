@@ -238,10 +238,12 @@ li a span {
   line-height: 1.5;
   margin: 5px 0;
   position: relative;
+ 
 }
 
 /* Message from the current user */
 .message.current-user {
+ 
   background-color: #007bff;
   color: white;
   align-self: flex-end;
@@ -278,6 +280,23 @@ li a span {
   border-radius: 5px;
   cursor: pointer;
 }
+.date-divider {
+  text-align: center;
+  font-size: 0.9em;
+  color: #105daa;
+ 
+  font-weight: bold;
+  background: #ffffff;
+ border-radius: 5px;
+  margin: 0;
+  z-index: 1;
+
+  position: -webkit-sticky;
+  position: sticky;
+  top: -1px;
+}
+
+
 
   @media only screen and (max-width: 660px){
     .sidebar {
