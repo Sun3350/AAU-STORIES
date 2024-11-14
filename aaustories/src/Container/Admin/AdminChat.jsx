@@ -33,7 +33,6 @@ function ChatComponent() {
 
     onValue(messagesRef, (snapshot) => {
       const data = snapshot.val();
-      console.log("Fetched data from Firebase:", data); // Check if this logs your messages
       
       const loadedMessages = [];
       for (let key in data) {
