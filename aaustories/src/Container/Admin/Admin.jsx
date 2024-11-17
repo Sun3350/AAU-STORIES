@@ -12,10 +12,10 @@ import { logout } from '../../utils/authSlice';
 import { useNavigate } from 'react-router-dom';
 import AdminHome from './AdminHome';
 
-const Admin = ({ children }) => {  // Add children to function parameters
+const Admin = ({ children}) => {  // Add children to function parameters
   const [isExpanded, setIsExpanded] = useState(true);
   const location = useLocation();
-
+  
   const toggleSidebar = () => {
     setIsExpanded(!isExpanded);
   };
@@ -51,6 +51,9 @@ const Admin = ({ children }) => {  // Add children to function parameters
     navigate('/blog');
   };
 
+
+  // Render the modal if chatName is not set
+  
   return (
     <div>
       <div className='header w-full flex justify-between items-center bg-[#105daa]'>

@@ -238,12 +238,10 @@ li a span {
   line-height: 1.5;
   margin: 5px 0;
   position: relative;
- 
 }
 
 /* Message from the current user */
 .message.current-user {
- 
   background-color: #007bff;
   color: white;
   align-self: flex-end;
@@ -296,7 +294,30 @@ li a span {
   top: -1px;
 }
 
+.chat-textarea{
+  width: 100%;
+  border: 1px solid #105daa;
+  padding: 10px;
+  height: 50px;
+  border-radius: 10px;
+}
+.reply-preview{
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px;
+ 
+}
+.cancel-reply{
+padding: 3px 10px 3px 10px ;
+display: flex;
+justify-content: center;
+align-items: center;
+  border-radius: 50%;
+  color: #007bff;
 
+}
 
   @media only screen and (max-width: 660px){
     .sidebar {
